@@ -17,12 +17,15 @@ const toLogin = () => {
   <!-- 学生端前台导航栏 -->
   <header class="bg-white dark:bg-gray-900">
     <nav class="bg-white dark:bg-gray-900">
-      <div class="container flex flex-col items-center pt-6 lg:px-6 mx-auto">
-        <a href="#" class="mx-auto">
-          <img class="w-auto h-6 sm:h-7" src="../../assets/images/logo.svg" alt="">
-        </a>
-
+      <div class="container flex flex-col items-center lg:px-6 mx-auto">
         <el-menu class="w-full justify-center" mode="horizontal" router default-active="/home">
+          <el-menu-item index="0">
+            <img
+              class="w-auto h-6 sm:h-7"
+              src="../../assets/images/logo.png"
+              alt="IHave logo"
+            />
+          </el-menu-item>
           <el-menu-item index="/home">首页</el-menu-item>
           <el-menu-item index="/notice">公告</el-menu-item>
           <el-menu-item index="/wanted">求购</el-menu-item>
@@ -45,7 +48,7 @@ const toLogin = () => {
   </header>
 </template>
 <style scoped>
-/* .ep-menu--horizontal > .ep-menu-item:nth-child(1) {
+.ep-menu--horizontal > .ep-menu-item:nth-child(1) {
   margin-right: auto;
-} */
+}
 </style>

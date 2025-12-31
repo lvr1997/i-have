@@ -2,10 +2,10 @@
     <footer class="border-t-blueGray bg-white dark:bg-gray-900 fixed bottom-0 left-0 right-0">
         <div class="w-4/5 lg:px-5 py-6 mx-auto flex items-center sm:flex-row flex-col">
             <a class="flex title-font font-medium items-center md:justify-start justify-center text-gray-500 text-sm">
-                科大二手工坊V2.0
+                I have
             </a>
-            <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 dark:sm:border-gray-700 ">© 2023 ihave —
-                <a href="https://github.com/lvr1997" class="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">@Lavrena</a>
+            <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 dark:sm:border-gray-700 ">© 2023 - 2025
+                <a href="https://github.com/lvr1997" class="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">@Riny</a>
             </p>
             <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
                 <a class="text-gray-500">

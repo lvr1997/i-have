@@ -2,12 +2,12 @@
   <section>
     <!-- 轮播图 -->
     <div class="flex text-center"> 
-      <div class="w-50% bg-white dark:bg-gray-900">
+      <!-- <div class="w-50% bg-white dark:bg-gray-900">
         <h1 class="mt-20">你想要的，这儿都有~</h1>
         <p class="text-gray-500">让闲置不再闲置...</p>
         <el-button type="primary" @click="toPublish">立即发布</el-button>
-      </div>
-      <el-carousel class="w-50%" motion-blur>
+      </div> -->
+      <el-carousel class="w-full" motion-blur>
         <el-carousel-item class="bg-blue-2" v-for="item in 4" :key="item">
           <h3 class="small justify-center leading-9" text="2xl">{{ item }}</h3>
         </el-carousel-item>
