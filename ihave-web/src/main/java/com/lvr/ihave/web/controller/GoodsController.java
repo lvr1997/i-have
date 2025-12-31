@@ -5,12 +5,15 @@ import com.lvr.ihave.business.service.*;
 import com.lvr.ihave.constant.Constant;
 import com.lvr.ihave.pojo.*;
 import com.lvr.ihave.util.JSONResult;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
 import java.util.*;
 
-@RestController
+@Controller
 @RequestMapping("/good")
 public class GoodsController {
     @Resource
@@ -27,6 +30,31 @@ public class GoodsController {
 
     @Resource
     private UserService userService;
+
+    /**
+     * 根据商品名称查询商品列表
+     * @param keyword
+     * @return
+     * @throws Exception
+     */
+    @PassToken
+    @GetMapping(value = "/listForAdmin")
+    public String getGoodsListForAdmin(@RequestParam(value = "keyword",required = false) String keyword, Model model) throws Exception {
+        List<Goods> goodsList = goodsService.searchGoodsByKeyWord(keyword);
+        //返回数据
+        model.addAttribute("goodsList", goodsList);
+        return "goods/list";
+    }
+
+    @PassToken
+    @GetMapping(value = "/list")
+    public JSONResult getGoodsList(@RequestParam(value = "keyword",required = false) String keyword) throws Exception {
+        List<Goods> goodsList = goodsService.searchGoodsByKeyWord(keyword);
+        //返回数据
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("goodsList", goodsList);
+        return JSONResult.success(Constant.SUCCESS_DATA, resultMap);
+    }
 
     /**
      * 根据商品id查询该商品详细信息

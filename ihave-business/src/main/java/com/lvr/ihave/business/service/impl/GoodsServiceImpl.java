@@ -178,8 +178,8 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> searchGoodsByKeyWord(String name, String describle) {
-        return goodsMapper.searchGoodsByKeyWord(name,describle);
+    public List<Goods> searchGoodsByKeyWord(String name) {
+        return goodsMapper.searchGoodsByKeyWord(name);
     }
 
     @Override

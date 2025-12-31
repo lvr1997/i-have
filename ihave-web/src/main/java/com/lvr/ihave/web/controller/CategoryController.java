@@ -1,6 +1,7 @@
 package com.lvr.ihave.web.controller;
 
 import com.lvr.ihave.business.service.CategoryService;
+import com.lvr.ihave.business.service.GoodsService;
 import com.lvr.ihave.pojo.Catelog;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.annotation.Resource;
 
@@ -17,6 +19,9 @@ public class CategoryController {
 
     @Resource
     private CategoryService categoryService;
+
+    @Resource
+    private GoodsService goodsService;
 
     @RequestMapping("/list")
     public String list(@RequestParam(value = "keyword",required = false) String keyword, Model model){
@@ -61,14 +66,26 @@ public class CategoryController {
     }
 
     @RequestMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Integer id){
-        categoryService.deleteByPrimaryKey(id);
-        return "redirect:/category/list";
+    public String delete(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes){
+        //判断分类下是否有闲置商品
+        int goodsCount = findGoodsCountByCategoryId(id);
+        if(goodsCount > 0){
+            redirectAttributes.addFlashAttribute("errorMsg","该分类下有闲置商品，不能删除");
+            return "redirect:/category/list";
+        } else {
+            categoryService.deleteByPrimaryKey(id);
+            return "redirect:/category/list";
+        }
+        
     }
 
     @RequestMapping("/updateStatus")
     public String updateStatus(@RequestParam("id") Integer id, @RequestParam("status") Byte status){
         categoryService.updateStatus(id, status);
         return "redirect:/category/list";
+    }
+
+    private int findGoodsCountByCategoryId(Integer categoryId){
+        return goodsService.selectGoodsByCatelogStatus(categoryId).size();
     }
 }

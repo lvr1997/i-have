@@ -71,7 +71,7 @@ public class SearchController {
     @GetMapping(value = "/searchgood")
     public JSONResult searchGood(String keyword){
         List<CatelogExtend> catelogExtendList = new ArrayList<CatelogExtend>();
-        List<Goods> goodsList = goodsService.searchGoodsByKeyWord(keyword,keyword);
+        List<Goods> goodsList = goodsService.searchGoodsByKeyWord(keyword);
         for (Goods goods:goodsList) {
             Catelog catelog = catelogService.selectByPrimaryKey(goods.getCatelogId());
             SysUser user = userService.selectByPrimaryKey(goods.getUserId());

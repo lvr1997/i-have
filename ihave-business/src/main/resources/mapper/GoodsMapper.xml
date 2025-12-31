@@ -9,12 +9,17 @@
       <result column="name" property="name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="price" property="price" jdbcType="REAL" javaType="java.lang.Float" />
       <result column="real_price" property="realPrice" jdbcType="REAL" javaType="java.lang.Float" />
+      <result column="start_time" property="startTime" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="publish_time" property="polishTime" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="end_time" property="endTime" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="first_image" property="firstImage" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="good_buy_method" property="goodBuyMethod" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="good_address" property="goodAddress" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="view_count" property="viewCount" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <result column="describle" property="describle" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
       <result column="status" property="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <result column="seller_note" property="sellerNote" jdbcType="VARCHAR" javaType="java.lang.String" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     <!--
@@ -112,7 +117,7 @@
     FROM
       goods
     WHERE
-      catelog_id = #{cid}
+      cate_id = #{cid}
     AND
       status = #{status}
   </select>
@@ -123,7 +128,7 @@
     from
       goods
     where
-      cate_id = #{catelog_id,jdbcType=INTEGER}
+      cate_id = #{catelogId,jdbcType=INTEGER}
     AND
       status = 1
     order by
@@ -236,13 +241,17 @@
   <select id="searchGoodsByKeyWord" resultMap="BaseResultMap">
 
     select
-      id, cate_id, user_id, name, price, real_price, end_time, publish_time, describle,good_address,view_count,status
+      id, cate_id, user_id, name, price, real_price, start_time, publish_time, end_time, 
+      first_image, phone_number, good_buy_method, good_address, view_count, describle, status, seller_note
     from
       goods
-    where
-      (name like concat('%',#{name},'%')
-    OR
-      describle like concat('%',#{describle},'%'))
+    <where>
+      <if test="name != null">
+        name like concat('%',#{name},'%')
+        or
+        describle like concat('%',#{name},'%')
+      </if>
+    </where>
     order by
       publish_time
     ASC

@@ -12,6 +12,9 @@
 				<div th:replace="~{commons/common::sidebar(active='category')}"></div>
 				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 					<h2><a th:href="@{/category/add}" class="btn btn-sm btn-success">添加分类</a></h2>
+					<div class="alert alert-danger" role="alert" th:if="${errorMsg != null}">
+						<strong>错误：</strong>[[${errorMsg}]]
+					</div>
 					<div class="table-responsive">
 						<table class="table table-striped table-responsive-lg">
 							<thead>
