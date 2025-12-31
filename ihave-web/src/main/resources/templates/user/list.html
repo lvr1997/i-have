@@ -37,7 +37,7 @@
                             <tr th:each="data:${userList}">
                                 <td th:text="${data.getUserId()}"></td>
                                 <td th:text="${data.getUsername()}"></td>
-                                <td th:text="${data.getPhone()}"></td>
+                                <td th:text="${data.getPhone().substring(0, 3)+'****'+data.getPhone().substring(7)}"></td>
                                 <td th:text="${data.getStatus()==1?'正常':'停用'}"></td>
                                 <td th:text="${data.getCreateAt()}"></td>
                                 <td th:text="${data.getLastLogin()}?:'未登录'"></td>
