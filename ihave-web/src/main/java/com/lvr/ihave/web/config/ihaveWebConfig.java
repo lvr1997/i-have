@@ -82,6 +82,6 @@ public class IhaveWebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/index.html","/admin/login","/css/*","/img/*","/js/*");
+                .excludePathPatterns("/", "/login.html","/admin/login","/css/*","/img/*","/js/*");
     }
 }
