@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public JSONResult handleException(Exception e) {
+    public JSONResult handleException(RuntimeException e) {
         String msg = e.getMessage();
         if (msg == null || msg.equals("")) {
             msg = StatusEnum.SYSTEM_ERROR.getMsg();

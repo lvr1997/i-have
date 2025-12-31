@@ -21,6 +21,8 @@ public interface UserService {
 
     int updateByPrimaryKeySelective(SysUser record);
 
+    int updateStatusByPrimaryKey(String id, Integer status);
+
     /**
      * 通过用户名查询用户
      *

@@ -11,4 +11,12 @@ public interface RoleMapper {
      * @return 角色列表
      */
     List<Roles> selectAllRoles();
+
+    Roles selectRoleById(String id);
+
+    void updateRole(Roles role);
+
+    void insertRole(Roles role);
+
+    void deleteRole(String id);
 }

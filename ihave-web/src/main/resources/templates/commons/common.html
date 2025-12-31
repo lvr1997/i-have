@@ -63,9 +63,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
+                <a th:class="${active=='role'?'nav-link active':'nav-link'}" th:href="@{/role/list}">
                     <i data-feather="users"></i>
-                    学校管理
+                    角色管理
                 </a>
             </li>
         </ul>

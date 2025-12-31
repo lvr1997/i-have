@@ -98,7 +98,7 @@ public class UserController {
             return "redirect:/user/list";
         } catch (Exception e) {
             model.addAttribute("errorMsg", "用户更新失败: " + e.getMessage());
-            return "redirect:/user/list";
+            return "user/list";
         }
     }
 
@@ -110,6 +110,18 @@ public class UserController {
     @GetMapping("/delete/{userId}")
     public String deleteUser(@PathVariable("userId") String userId){
         userService.deleteByPrimaryKey(userId);
+        return "redirect:/user/list";
+    }
+
+    /**
+     * 更新用户状态
+     * @param id 用户ID
+     * @param status 状态值
+     * @return
+     */
+    @GetMapping("/updateStatus")
+    public String updateStatus(@RequestParam("id") String id, @RequestParam("status") Integer status){
+        userService.updateStatusByPrimaryKey(id,status);
         return "redirect:/user/list";
     }
 

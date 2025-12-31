@@ -18,5 +18,32 @@
         order by id
     </select>
    
+    <!-- 根据ID获取角色 -->
+    <select id="selectRoleById" parameterType="string" resultMap="SysRoleResult">
+        select id, role_id, role_name, commet, create_date 
+        from roles 
+        where id = #{id}
+    </select>
+
+    <!-- 更新角色 -->
+    <update id="updateRole" parameterType="com.lvr.ihave.pojo.Roles">
+        update roles
+        <set>
+            <if test="roleName != null">role_name = #{roleName},</if>
+            <if test="commet != null">commet = #{commet},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 新增角色 -->
+    <insert id="insertRole" parameterType="com.lvr.ihave.pojo.Roles">
+        insert into roles (id, role_id, role_name, commet, create_date)
+        values (#{id}, #{roleId}, #{roleName}, #{commet}, #{createDate})
+    </insert>
+
+     <!-- 删除角色 -->
+    <delete id="deleteRole" parameterType="string">
+        delete from roles where id = #{id}
+    </delete>
 
 </mapper>

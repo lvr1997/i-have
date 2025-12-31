@@ -95,6 +95,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int updateStatusByPrimaryKey(String id, Integer status) {
+        return userMapper.updateStatusByPrimaryKey(id,status);
+    }
+
+    @Override
     public List<SysUser> searchUserByNameOrPhone(String name, String phone) {
         return userMapper.searchUserByNameOrPhone(name,phone);
     }

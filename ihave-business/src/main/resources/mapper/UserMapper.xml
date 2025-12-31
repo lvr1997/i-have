@@ -196,6 +196,18 @@ user_id, phone, username, password, create_at, last_login, status, birthday, sex
       user_id = #{uid}
   </update>
 
+  <update id="updateStatusByPrimaryKey">
+    UPDATE
+      user
+    <set>
+      <if test="status != null">
+        status = #{status}
+      </if>
+    </set>
+    WHERE
+      user_id = #{userId}
+  </update>
+
   <select id="selectUserByUserName" parameterType="String" resultMap="BaseResultMap">
     <include refid="selectUserVo"/>
     where u.user_name = #{userName}

@@ -32,13 +32,15 @@
 									<td th:text="${data.getName()}"></td>
 									<td th:text="${data.getStatus()==1?'正常':'停用'}"></td>
 									<td>
-										<a class="btn btn-sm btn-primary" th:href="@{'/category/'+${data.getId()}}">
-											修改
+										<a class="btn btn-sm btn-primary" th:href="@{'/category/'+${data.getId()}}" title="修改">
+											<i data-feather="edit"></i>
 										</a>
 										<a class="btn btn-sm btn-danger" href="javascript:void(0);"
 											th:data-name="${data.getName()}"
 											th:data-delete-url="@{/category/delete/{id}(id=${data.getId()})}"
-											onclick="showConfirmModal(this)">删除</a>	
+											onclick="showConfirmModal(this)" title="删除">
+											<i data-feather="trash"></i>
+										</a>	
 									</td>
 								</tr>
 							</tbody>

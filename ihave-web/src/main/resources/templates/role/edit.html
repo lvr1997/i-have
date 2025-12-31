@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{commons/include :: header('编辑角色')}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+</head>
+
+<body>
+    <div th:replace="~{commons/common::topbar}"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div th:replace="~{commons/common::sidebar(active='user')}"></div>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                <h2>编辑角色信息</h2>
+                <div class="alert alert-danger" role="alert" th:if="${errorMsg != null}">
+                    <strong>错误：</strong>[[${errorMsg}]]
+                </div>
+                <form method="post" th:action="@{/role/edit}">
+                    <input type="hidden" name="id" th:value="${role?.id}">
+                    <div class="form-group" th:if="${role?.id == null}">
+                        <label for="roleId">角色唯一标识</label>
+                        <input type="text" name="roleId" th:value="${role?.roleId}" class="form-control" id="roleId">
+                        <small class="form-text text-muted">新增后不可修改</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="roleName">角色名称</label>
+                        <input type="text" name="roleName" th:value="${role?.roleName}" class="form-control" id="roleName" 
+                               placeholder="请输入角色名称" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="commet">角色描述</label>
+                        <input type="text" name="commet" th:value="${role?.commet}" class="form-control" id="commet" 
+                               placeholder="请输入角色描述">
+                    </div>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="reset" class="btn btn-secondary">重置</button>
+                    <a class="btn btn-outline-secondary" href="/role/list">返回</a>
+                </form>
+            </main>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -11,4 +11,12 @@ public interface RoleService {
      * @return 角色列表
      */
     List<Roles> getAllRoles();
+
+    Roles getRoleById(String id);
+
+    void updateRole(Roles role);
+
+    void addRole(Roles role);
+
+    void deleteRole(String id);
 }

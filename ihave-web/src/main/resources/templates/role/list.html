@@ -3,7 +3,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <th:block th:include="~{commons/include :: header('用户列表')}" />
+    <th:block th:include="~{commons/include :: header('角色列表')}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -16,49 +16,34 @@
         <div class="row">
             <div th:replace="~{commons/common::sidebar(active='user')}"></div>
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                <h2><a th:href="@{/user/edit}" class="btn btn-sm btn-success">添加用户</a></h2>
+                <h2><a th:href="@{/role/edit}" class="btn btn-sm btn-success">添加角色</a></h2>
                 <div class="table-responsive">
                     <table class="table table-striped table-responsive-lg">
                         <thead>
                             <tr>
-                                <th>用户ID</th>
-                                <th>用户名</th>
-                                <th>手机号</th>
-                                <th>状态</th>
+                                <th>ID</th>
+                                <th>角色唯一标识</th>
+                                <th>角色名称</th>
+                                <th>备注</th>
                                 <th>创建时间</th>
-                                <th>最后登录时间</th>
-                                <th>性别</th>
-                                <th>居住地</th>
-                                <th>角色</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="data:${userList}">
-                                <td th:text="${data.getUserId()}"></td>
-                                <td th:text="${data.getUsername()}"></td>
-                                <td th:text="${data.getPhone()}"></td>
-                                <td th:text="${data.getStatus()==1?'正常':'停用'}"></td>
-                                <td th:text="${data.getCreateAt()}"></td>
-                                <td th:text="${data.getLastLogin()}?:'未登录'"></td>
-                                <td th:text="${data.getSex()}?:'未知'"></td>
-                                <td th:text="${data.getResidence()}?:'未设置'"></td>
+                            <tr th:each="data:${roleList}">
+                                <td th:text="${data.getId()}"></td>
+                                <td th:text="${data.getRoleId()}"></td>
+                                <td th:text="${data.getRoleName()}"></td>
+                                <td th:text="${data.getCommet()}"></td>
+                                <td th:text="${data.getCreateDate()}"></td>
                                 <td>
-                                    <span th:if="${data.getRole() != null}" 
-                                          th:text="${data.getRole().getRoleName()}">--</span>
-                                    <span th:unless="${data.getRole() != null}">--</span>
-                                </td>
-                                <td>
-                                    <a class="btn btn-sm" th:classappend="${data.getStatus()==1} ? 'btn-warning' : 'btn-success'" th:href="@{'/user/updateStatus?id='+${data.getUserId()}+'&status='+${data.getStatus()==1?0:1}}" th:title="${data.getStatus()==1} ? '禁用用户' : '启用用户'">
-                                        <i th:data-feather="${data.getStatus()==1} ? 'user-x' : 'user-check'"></i>
-                                    </a>
-                                    <a class="btn btn-sm btn-primary" th:href="@{'/user/edit?userId='+${data.getUserId()}}" title="修改">
+                                    <a class="btn btn-sm btn-primary" th:href="@{'/role/edit?id='+${data.getId()}}" title="修改">
                                         <i data-feather="edit"></i>
                                     </a>
                                     <a class="btn btn-sm btn-danger"
                                         href="javascript:void(0);"
-                                        th:data-username="${data.getUsername()}"
-                                        th:data-delete-url="@{/user/delete/{userId}(userId=${data.getUserId()})}"
+                                        th:data-rolename="${data.getRoleName()}"
+                                        th:data-delete-url="@{/role/delete/{id}(id=${data.getId()})}"
                                         onclick="showConfirmModal(this)" title="删除">
                                         <i data-feather="trash"></i>
                                     </a>
@@ -82,7 +67,7 @@
                     </button>
                 </div>
                 <div class="modal-body" id="confirmModalBody">
-                    确定要删除该用户吗？此操作不可恢复！
+                    确定要删除该角色吗？此操作不可恢复！
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
@@ -102,9 +87,9 @@
     
     // 显示确认模态框
     function showConfirmModal(element) {
-        const username = element.getAttribute('data-username');
+        const roleName = element.getAttribute('data-rolename');
         const deleteUrl = element.getAttribute('data-delete-url');
-        const message = `确定要删除用户 "${username}" 吗？此操作不可恢复！`;
+        const message = `确定要删除角色 "${roleName}" 吗？此操作不可恢复！`;
         
         document.getElementById('confirmModalBody').innerText = message;
         currentDeleteUrl = deleteUrl;
