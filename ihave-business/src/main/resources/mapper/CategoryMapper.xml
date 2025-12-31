@@ -84,4 +84,13 @@
       name like concat('%',#{name},'%')
   </select>
 
+  <update id="updateStatus">
+    UPDATE
+      category
+    SET
+      status = #{status}
+    WHERE
+      id = #{id}
+  </update>
+
 </mapper>

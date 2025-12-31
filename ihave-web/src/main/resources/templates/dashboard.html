@@ -3,6 +3,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+	<th:block th:include="~{commons/include :: header('首页')}" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
@@ -87,13 +88,15 @@
 		</div>
 	</div>
 
+	<th:block th:include="~{commons/include :: footer}" />
+
 	<!-- Graphs -->
 	<script type="text/javascript" th:src="@{/js/chart.js}"></script>
 	<script>
 		const ctx = document.getElementById('myChart');
 
 		new Chart(ctx, {
-			type: 'bar',
+			type: 'line',
 			data: {
 				labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
 				datasets: [{

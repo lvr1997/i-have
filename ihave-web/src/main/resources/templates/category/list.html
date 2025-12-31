@@ -2,11 +2,7 @@
 <!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="">
-		<meta name="author" content="">
-		<title>分类列表</title>
+		<th:block th:include="~{commons/include :: header('分类')}" />
 	</head>
 
 	<body>
@@ -32,6 +28,9 @@
 									<td th:text="${data.getName()}"></td>
 									<td th:text="${data.getStatus()==1?'正常':'停用'}"></td>
 									<td>
+										<a class="btn btn-sm" th:classappend="${data.getStatus()==1} ? 'btn-warning' : 'btn-success'" th:href="@{'/category/updateStatus?id='+${data.getId()}+'&status='+${data.getStatus()==1?0:1}}" th:title="${data.getStatus()==1} ? '停用分类' : '启用分类'">
+											<i th:data-feather="${data.getStatus()==1} ? 'x' : 'check'"></i>
+										</a>
 										<a class="btn btn-sm btn-primary" th:href="@{'/category/'+${data.getId()}}" title="修改">
 											<i data-feather="edit"></i>
 										</a>
@@ -71,6 +70,7 @@
 			</div>
 		</div>
 
+		<th:block th:include="~{commons/include :: footer}" />
 		<script>
 			// 全局变量存储当前要删除的URL
 			let currentDeleteUrl = '';

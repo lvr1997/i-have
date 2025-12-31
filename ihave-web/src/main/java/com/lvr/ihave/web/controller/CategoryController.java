@@ -1,8 +1,6 @@
 package com.lvr.ihave.web.controller;
 
 import com.lvr.ihave.business.service.CategoryService;
-import com.lvr.ihave.business.utils.PageRequest;
-import com.lvr.ihave.business.utils.PageResult;
 import com.lvr.ihave.pojo.Catelog;
 
 import java.util.List;
@@ -65,6 +63,12 @@ public class CategoryController {
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id){
         categoryService.deleteByPrimaryKey(id);
+        return "redirect:/category/list";
+    }
+
+    @RequestMapping("/updateStatus")
+    public String updateStatus(@RequestParam("id") Integer id, @RequestParam("status") Byte status){
+        categoryService.updateStatus(id, status);
         return "redirect:/category/list";
     }
 }

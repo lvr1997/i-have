@@ -30,4 +30,6 @@ public interface CategoryService {
 //    int updateCatelogNum(Integer id, Integer number);
 
     List<Catelog> searchCatelogByName(String name);
+
+    void updateStatus(Integer id, Byte status);
 }

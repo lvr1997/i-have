@@ -50,11 +50,9 @@ public interface CategoryMapper {
     List<Catelog> getAllCatelogByStatus(@Param("status") Byte status);
 
 
-//    int getCount(Catelog catelog);
-    
-
-//    int updateCatelogNum(@Param("id") Integer id, @Param("number") Integer number);
-
     List<Catelog> searchCatelogByName(@Param("name") String name);
+
+
+    void updateStatus(Integer id, Byte status);
 
 }

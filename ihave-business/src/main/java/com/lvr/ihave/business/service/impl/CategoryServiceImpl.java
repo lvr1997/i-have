@@ -67,16 +67,13 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryOptions;
     }
 
-    //    public int getCount(Catelog catelog) {
-//        return catelogMapper.getCount(catelog);
-//    }
-
-//    public int updateCatelogNum(Integer id, Integer number) {
-//        return catelogMapper.updateCatelogNum(id,number);
-//    }
-
     @Override
     public List<Catelog> searchCatelogByName(String name) {
         return catelogMapper.searchCatelogByName(name);
+    }
+
+    @Override
+    public void updateStatus(Integer id, Byte status) {
+        catelogMapper.updateStatus(id, status);
     }
 }
