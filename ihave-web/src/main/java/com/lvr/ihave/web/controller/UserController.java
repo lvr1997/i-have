@@ -45,11 +45,11 @@ public class UserController {
      * @param model 模型
      * @return
      */
-    @GetMapping("/edit/{id}")
-    public String editUser(@PathVariable("id") String id, Model model){
-        if(id != null && !id.isEmpty()){
+    @GetMapping("/edit")
+    public String editUser(@RequestParam(value = "userId", required = false) String userId, Model model){
+        if(userId != null && !userId.isEmpty()){
             // 修改操作，查询用户信息
-            SysUser user = userService.selectByPrimaryKey(id);
+            SysUser user = userService.selectByPrimaryKey(userId);
             model.addAttribute("user", user);
         } else {
             // 新增操作，创建空用户对象
@@ -100,6 +100,17 @@ public class UserController {
             model.addAttribute("errorMsg", "用户更新失败: " + e.getMessage());
             return "redirect:/user/list";
         }
+    }
+
+    /**
+     * 删除用户
+     * @param id 用户ID
+     * @return
+     */
+    @GetMapping("/delete/{userId}")
+    public String deleteUser(@PathVariable("userId") String userId){
+        userService.deleteByPrimaryKey(userId);
+        return "redirect:/user/list";
     }
 
 }

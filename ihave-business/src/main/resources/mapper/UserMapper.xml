@@ -39,11 +39,11 @@
   <!--通过id删除用户信息-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from user
-    where id = #{id,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
   </delete>
 
   <!--添加用户-->
-  <insert id="insert" parameterType="com.lvr.ihave.pojo.SysUser" useGeneratedKeys="true" keyProperty="">
+  <insert id="insert" parameterType="com.lvr.ihave.pojo.SysUser" useGeneratedKeys="true" keyProperty="userId">
     insert into user (user_id, phone, username,
       password, create_at,
       last_login,
@@ -165,10 +165,10 @@ user_id, phone, username, password, create_at, last_login, status, birthday, sex
         residence = #{residence,jdbcType=LONGVARCHAR},
       </if>
       <if test="signature != null">
-        signature = #{signature,jdbcType=LONGVARCHAR}
+        signature = #{signature,jdbcType=LONGVARCHAR},
       </if>
       <if test="roleId != null">
-        , role_id = #{roleId,jdbcType=VARCHAR}
+        role_id = #{roleId,jdbcType=VARCHAR}
       </if>
     </set>
     where

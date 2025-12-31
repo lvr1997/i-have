@@ -8,10 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
 </head>
 
 <body class="pear-container">
@@ -53,11 +49,14 @@
                                     <span th:unless="${data.getRole() != null}">--</span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-primary" th:href="@{'/user/edit/'+${data.getUserId()}}">
+                                    <a class="btn btn-sm btn-primary" th:href="@{'/user/edit?userId='+${data.getUserId()}}">
                                         修改
                                     </a>
                                     <a class="btn btn-sm btn-danger"
-                                        th:href="@{'/user/delete/'+${data.getUserId()}}">删除</a>
+                                        href="javascript:void(0);"
+                                        th:data-username="${data.getUsername()}"
+                                        th:data-delete-url="@{/user/delete/{userId}(userId=${data.getUserId()})}"
+                                        onclick="showConfirmModal(this)">删除</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -67,19 +66,52 @@
         </div>
     </div>
 
+    <!-- Bootstrap确认模态框 -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">确认删除</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="confirmModalBody">
+                    确定要删除该用户吗？此操作不可恢复！
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">确定删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <th:block th:include="~{commons/include :: footer}" />
 
-<script type="text/html" id="user-toolbar">
-    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
-        <i class="layui-icon layui-icon-add-1"></i>
-        新增
-    </button>
-    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
-        <i class="layui-icon layui-icon-delete"></i>
-        删除
-    </button>
+<script>
+    // 全局变量存储当前要删除的URL
+    let currentDeleteUrl = '';
+    
+    // 显示确认模态框
+    function showConfirmModal(element) {
+        const username = element.getAttribute('data-username');
+        const deleteUrl = element.getAttribute('data-delete-url');
+        const message = `确定要删除用户 "${username}" 吗？此操作不可恢复！`;
+        
+        document.getElementById('confirmModalBody').innerText = message;
+        currentDeleteUrl = deleteUrl;
+        $('#confirmModal').modal('show');
+    }
+    
+    // 确认删除操作
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if (currentDeleteUrl) {
+            window.location.href = currentDeleteUrl;
+        }
+    });
 </script>
 
 </html>

@@ -6,11 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<title>Dashboard Template for Bootstrap</title>
-		<!-- Bootstrap core CSS -->
-		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-		<!-- Custom styles for this template -->
-		<link th:href="@{/css/dashboard.css}" rel="stylesheet">
+		<title>分类列表</title>
 	</head>
 
 	<body>
@@ -39,7 +35,10 @@
 										<a class="btn btn-sm btn-primary" th:href="@{'/category/'+${data.getId()}}">
 											修改
 										</a>
-										<a class="btn btn-sm btn-danger" th:href="@{'/category/delete/'+${data.getId()}}">删除</a>	
+										<a class="btn btn-sm btn-danger" href="javascript:void(0);"
+											th:data-name="${data.getName()}"
+											th:data-delete-url="@{/category/delete/{id}(id=${data.getId()})}"
+											onclick="showConfirmModal(this)">删除</a>	
 									</td>
 								</tr>
 							</tbody>
@@ -49,17 +48,48 @@
 			</div>
 		</div>
 
-		<!-- Bootstrap core JavaScript
-    ================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script type="text/javascript" th:src="@{/js/jquery-3.2.1.slim.min.js}" ></script>
-		<script type="text/javascript" th:src="@{/js/popper.min.js}" ></script>
-		<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+		<!-- Bootstrap确认模态框 -->
+		<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmModalLabel">确认删除</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="confirmModalBody">
+						确定要删除该分类吗？此操作不可恢复！
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+						<button type="button" class="btn btn-danger" id="confirmDeleteBtn">确定删除</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-		<!-- Icons -->
-		<script type="text/javascript" th:src="@{/js/feather.min.js}" ></script>
 		<script>
-			feather.replace()
+			// 全局变量存储当前要删除的URL
+			let currentDeleteUrl = '';
+			
+			// 显示确认模态框
+			function showConfirmModal(element) {
+				const name = element.getAttribute('data-name');
+				const deleteUrl = element.getAttribute('data-delete-url');
+				const message = `确定要删除分类 "${name}" 吗？此操作不可恢复！`;
+				
+				document.getElementById('confirmModalBody').innerText = message;
+				currentDeleteUrl = deleteUrl;
+				$('#confirmModal').modal('show');
+			}
+			
+			// 确认删除操作
+			document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+				if (currentDeleteUrl) {
+					window.location.href = currentDeleteUrl;
+				}
+			});
 		</script>
 	</body>
 

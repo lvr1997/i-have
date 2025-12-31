@@ -7,39 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>编辑用户信息</title>
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-    <style type="text/css">
-        /* Chart.js */
-        
-        @-webkit-keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-        
-        @keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-        
-        .chartjs-render-monitor {
-            -webkit-animation: chartjs-render-animation 0.001s;
-            animation: chartjs-render-animation 0.001s;
-        }
-    </style>
 </head>
 
 <body>
@@ -123,17 +91,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.slim.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
-
-    <!-- Icons -->
-    <script type="text/javascript" th:src="@{/js/feather.min.js}"></script>
     <script>
-        feather.replace()
         
         // 表单提交前的验证
         document.querySelector('form').addEventListener('submit', function(e) {
