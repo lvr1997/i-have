@@ -6,7 +6,6 @@ import com.lvr.ihave.business.service.CategoryService;
 import com.lvr.ihave.business.service.GoodsService;
 import com.lvr.ihave.business.service.ImageService;
 import com.lvr.ihave.constant.Constant;
-import com.lvr.ihave.constant.StatusEnum;
 import com.lvr.ihave.pojo.*;
 import com.lvr.ihave.util.JSONResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/goods")
@@ -47,25 +45,18 @@ public class HomeController {
 
         //所有商品
         List<GoodsExtend> goodsAndImage = null;
-        //浏览量排序的数据
-//        List<GoodsExtend> hotGoods = null;
 
         //所有没有禁用的分类
         List<Catelog> categories = catelogService.getAllCatelogByStatus((byte)1);
         //所有没有被下架的闲置
         List<Goods> goodsList = goodsService.selectGoodsByStatusOrderByPolishTime((byte)1);
-        //获取浏览量最多的前十件物品
-//        Integer limit = Integer.valueOf(10);
-//        List<Goods> goods_intru = goodsService.selectGoodsByStatusOrderByViewcountLimit((byte)1,limit);
         //把图片和闲置信息绑定在一起
         goodsAndImage = handlerGoodsAndView(goodsList);
-//        hotGoods = handlerGoodsAndView(goods_intru);
 
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<String, Object>();
 
         map.put("goodsList", goodsAndImage);
         map.put("categories",categories);
-//        map.put("hotGoods", hotGoods);
 
         return JSONResult.success(Constant.SUCCESS_DATA, map);
 
@@ -107,10 +98,8 @@ public class HomeController {
 //        Catelog catelog = catelogService.selectByPrimaryKey(cid);
 //        List<Catelog> catelogs = catelogService.getAllCatelogByStatus((byte)1);
         List<GoodsExtend> goodsExtendList = handlerGoodsAndView(goodsList);
-        HashMap resultMap = new HashMap();
-        resultMap.put("goodsList", goodsExtendList);
 
-        return JSONResult.success(Constant.SUCCESS_DATA, resultMap);
+        return JSONResult.success(Constant.SUCCESS_DATA, goodsExtendList);
     }
 
 }

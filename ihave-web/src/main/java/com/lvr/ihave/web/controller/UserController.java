@@ -1,5 +1,6 @@
 package com.lvr.ihave.web.controller;
 
+import com.lvr.ihave.annotation.AdminToken;
 import com.lvr.ihave.business.service.*;
 import com.lvr.ihave.pojo.*;
 import com.lvr.ihave.util.MD5;
@@ -30,6 +31,7 @@ public class UserController {
      * @param model
      * @return
      */
+    @AdminToken
     @GetMapping("/list")
     public String userList(Model model){
         List<SysUser> userList = userService.getUserList();
@@ -45,6 +47,7 @@ public class UserController {
      * @param model 模型
      * @return
      */
+    @AdminToken
     @GetMapping("/edit")
     public String editUser(@RequestParam(value = "userId", required = false) String userId, Model model){
         if(userId != null && !userId.isEmpty()){
@@ -70,6 +73,7 @@ public class UserController {
      * @param user 用户信息
      * @return
      */
+    @AdminToken
     @PostMapping("/update")
     public String updateUser(SysUser user, Model model){
         try {
@@ -90,9 +94,11 @@ public class UserController {
                 
                 // 新增用户
                 userService.insert(user);
+                logger.info("新增用户ID: {}", user.getUserId());
             } else {
                 // 更新用户信息
                 userService.updateByPrimaryKeySelective(user);
+                logger.info("更新用户ID: {}", user.getUserId());
             }
             
             return "redirect:/user/list";
@@ -107,9 +113,11 @@ public class UserController {
      * @param id 用户ID
      * @return
      */
+    @AdminToken
     @GetMapping("/delete/{userId}")
     public String deleteUser(@PathVariable("userId") String userId){
         userService.deleteByPrimaryKey(userId);
+        logger.info("删除用户ID: {}", userId);
         return "redirect:/user/list";
     }
 
@@ -119,9 +127,11 @@ public class UserController {
      * @param status 状态值
      * @return
      */
+    @AdminToken
     @GetMapping("/updateStatus")
     public String updateStatus(@RequestParam("id") String id, @RequestParam("status") Integer status){
         userService.updateStatusByPrimaryKey(id,status);
+        logger.info("更新用户ID: {} 状态为: {}", id, status);
         return "redirect:/user/list";
     }
 

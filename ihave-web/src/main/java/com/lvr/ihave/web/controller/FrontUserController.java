@@ -13,7 +13,6 @@ import com.lvr.ihave.util.JSONResult;
 import com.lvr.ihave.util.MD5;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Controller
+@RestController
 @RequestMapping("/front/user")
 public class FrontUserController {
 
@@ -86,36 +85,6 @@ public class FrontUserController {
             return JSONResult.fail(StatusEnum.FAIL.getCode(), Constant.VERIFY_CODE_NOT_CORRECT);
         }
     }
-
-    @PassToken
-    @ResponseBody
-    @PostMapping(value = "/get_verify_code")
-    public JSONResult getVerifyCode(HttpSession session,
-                                      @RequestParam(value = "phonenum") String phonenum,
-                                      @RequestParam(value = "captcha") String captcha,
-                                      @RequestParam(value = "type") String type){
-        String captCode = (String)session.getAttribute("number");
-        Map<String, Object> map = new HashMap<String, Object>();
-        if(captcha.equals(captcha) && type.equals("1")){
-            //查找用户是否存在
-            Integer count = userService.checkUserByPhone(phonenum);
-            if(count>0){
-                System.out.println("phonenum:"+phonenum+", captcha:"+captcha+", type:"+type);
-
-                //发送验证码
-
-
-                //返回确认信息
-                return JSONResult.success(StatusEnum.SUCCESS.getMsg());
-            }else{
-                return JSONResult.fail(StatusEnum.NOT_FOUND.getCode(), StatusEnum.NOT_FOUND.getMsg());
-            }
-        }else{
-            //
-            return JSONResult.fail(StatusEnum.FAIL.getCode(), Constant.VERIFY_CODE_NOT_CORRECT);
-        }
-    }
-
 
     @PassToken
     @ResponseBody
@@ -441,7 +410,6 @@ public class FrontUserController {
     @RequestMapping(value = "/collect", method = RequestMethod.GET)
     public JSONResult collect(String userId, Integer gid){
 
-        Map<String, Object> map = new HashMap<String, Object>();
         //判断用户是否登陆
         if(userId!=null){
             Wanted wanted = wantedService.selectWant(userId,gid);

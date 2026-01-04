@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lvr.ihave.constant.Constant;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -26,7 +28,7 @@ public class AdminController {
         //检查用户名和密码是否正确
         if("admin".equals(username) && "123456".equals(password)){
             //当用户名为admin且密码是123456的时候可以进入主页面
-            session.setAttribute("LoginUser",username);
+            session.setAttribute(Constant.LOGIN_USER_KEY,username);
             return "redirect:/main.html";
         }else{
             //用户名或者密码错误的时候给出相应的错误提示,并且返回主页面

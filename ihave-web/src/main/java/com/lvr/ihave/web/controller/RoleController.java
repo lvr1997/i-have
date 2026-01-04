@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lvr.ihave.annotation.AdminToken;
 import com.lvr.ihave.business.service.RoleService;
 import com.lvr.ihave.pojo.Roles;
 
@@ -21,6 +22,12 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+    /**
+     * 角色列表
+     * @param model
+     * @return
+     */
+    @AdminToken
     @GetMapping("/list")
     public String list(Model model) {
         List<Roles> roleList = roleService.getAllRoles();
@@ -35,6 +42,7 @@ public class RoleController {
      * @param model
      * @return
      */
+    @AdminToken
     @GetMapping("/edit")
     public String edit(@RequestParam(value = "id", required = false) String id, Model model) {
         if (id == null || id.isEmpty()) {
@@ -54,6 +62,7 @@ public class RoleController {
      * @param role 角色对象
      * @return
      */
+    @AdminToken
     @PostMapping("/edit")
     public String editSubmit(Roles role) {
         // 新增角色
@@ -71,6 +80,7 @@ public class RoleController {
      * @param id 角色ID
      * @return
      */
+    @AdminToken
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") String id) {
         roleService.deleteRole(id);

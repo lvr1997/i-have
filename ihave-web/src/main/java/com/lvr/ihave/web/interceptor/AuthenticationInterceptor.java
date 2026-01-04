@@ -89,44 +89,24 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      * 验证管理员Token - 校验服务端Session（后台管理端）
      */
     private boolean validateAdminToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // 从Session中获取管理员token
-        String token = (String) request.getSession().getAttribute(Constant.TOKEN);
+        // 从Session中获取管理员登录信息
+        String username = (String) request.getSession().getAttribute(Constant.LOGIN_USER_KEY);
         
-        if (StringUtils.isEmpty(token)) {
+        if (StringUtils.isEmpty(username)) {
             log.error("管理员未登录，请先登录");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            // 后台管理端未登录时重定向到登录页面
+            response.sendRedirect("/login.html");
             return false;
         }
 
-        // 验证JWT token
-        boolean result = JWTUtil.verify(token, Constant.LOGIN_USER_KEY.getBytes());
-        if (!result) {
-            log.error("管理员token验证失败！token is {}, uri is {}", token, request.getRequestURI());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        // 验证是否为管理员用户
+        if (!"admin".equals(username)) {
+            log.error("非管理员用户访问后台管理页面");
+            response.sendRedirect("/login.html");
             return false;
         }
 
-        // 解析token获取用户信息
-        JWT jwt = JWTUtil.parseToken(token);
-        String userId = (String) jwt.getPayload("userId");
-
-        if (StringUtils.isEmpty(userId)) {
-            log.error("管理员token解析失败");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-
-        // 验证用户是否存在且为管理员
-        SysUser user = userService.selectByPrimaryKey(userId);
-        if (user == null) {
-            log.error("管理员用户不存在");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-
-        // 设置当前用户上下文
-        UserContext.setCurrentId(userId);
-        log.info("管理员token校验成功，用户ID: {}", userId);
+        log.info("管理员登录校验成功，用户名: {}", username);
         return true;
     }
 
@@ -139,39 +119,53 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         
         if (StringUtils.isEmpty(token)) {
             log.error("用户未登录，请先登录");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            // 前台客户端未登录时返回JSON格式错误信息
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"code\":401,\"msg\":\"用户未登录，请先登录\",\"data\":null}");
             return false;
         }
 
-        // 验证JWT token
-        boolean result = JWTUtil.verify(token, Constant.LOGIN_USER_KEY.getBytes());
-        if (!result) {
-            log.error("用户token验证失败！token is {}, uri is {}", token, request.getRequestURI());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        try {
+            // 验证JWT token
+            boolean result = JWTUtil.verify(token, Constant.LOGIN_USER_KEY.getBytes());
+            if (!result) {
+                log.error("用户token验证失败！token is {}, uri is {}", token, request.getRequestURI());
+                // 前台客户端token验证失败时返回JSON格式错误信息
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"code\":401,\"msg\":\"token验证失败\",\"data\":null}");
+                return false;
+            }
+
+            // 解析token获取用户信息
+            JWT jwt = JWTUtil.parseToken(token);
+            String userId = (String) jwt.getPayload("userId");
+
+            if (StringUtils.isEmpty(userId)) {
+                log.error("用户token解析失败");
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"code\":401,\"msg\":\"token解析失败\",\"data\":null}");
+                return false;
+            }
+
+            // 验证用户是否存在
+            SysUser user = userService.selectByPrimaryKey(userId);
+            if (user == null) {
+                log.error("用户不存在");
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"code\":401,\"msg\":\"用户不存在\",\"data\":null}");
+                return false;
+            }
+
+            // 设置当前用户上下文
+            UserContext.setCurrentId(userId);
+            log.info("用户token校验成功，用户ID: {}", userId);
+            return true;
+        } catch (Exception e) {
+            log.error("用户token验证异常: {}", e.getMessage());
+            // 捕获JWT解析异常，返回友好的错误信息
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"code\":401,\"msg\":\"token格式错误\",\"data\":null}");
             return false;
         }
-
-        // 解析token获取用户信息
-        JWT jwt = JWTUtil.parseToken(token);
-        String userId = (String) jwt.getPayload("userId");
-
-        if (StringUtils.isEmpty(userId)) {
-            log.error("用户token解析失败");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-
-        // 验证用户是否存在
-        SysUser user = userService.selectByPrimaryKey(userId);
-        if (user == null) {
-            log.error("用户不存在");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-
-        // 设置当前用户上下文
-        UserContext.setCurrentId(userId);
-        log.info("用户token校验成功，用户ID: {}", userId);
-        return true;
     }
 }
