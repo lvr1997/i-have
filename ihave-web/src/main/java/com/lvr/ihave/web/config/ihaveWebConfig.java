@@ -1,7 +1,6 @@
 package com.lvr.ihave.web.config;
 
 import com.lvr.ihave.web.config.MyLocaleResolver;
-import com.lvr.ihave.web.interceptor.AdminInterceptor;
 import com.lvr.ihave.web.interceptor.AuthenticationInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
