@@ -1,19 +1,12 @@
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
-import { defineConfig } from 'vite'
+import path from 'node:path'
+import Vue from '@vitejs/plugin-vue'
 
-import AutoImport from 'unplugin-auto-import/vite'
+import Unocss from 'unocss/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
+import VueRouter from 'unplugin-vue-router/vite'
 
-import {
-  presetAttributify,
-  presetIcons,
-  presetUno,
-  transformerDirectives,
-  transformerVariantGroup,
-} from 'unocss'
-import Unocss from 'unocss/vite'
+import { defineConfig } from 'vite'
 
 const pathSrc = path.resolve(__dirname, 'src')
 
@@ -43,18 +36,13 @@ export default defineConfig({
     },
   },
   plugins: [
-    vue(),
-    AutoImport({
-      imports: ["vue", "@vueuse/core", "pinia", "vue-router"],
-      dts: 'src/auto-imports.d.ts',
-      //elements
-      resolvers: [ElementPlusResolver()],
-      vueTemplate: true,
+    Vue(),
+    VueRouter({
+      extensions: ['.vue', '.md'],
+      dts: 'src/typed-router.d.ts',
     }),
     Components({
-      // allow auto load markdown components under `./src/components/`
       extensions: ['vue', 'md'],
-      // allow auto import and register components used in markdown
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       resolvers: [
         ElementPlusResolver({
@@ -63,22 +51,9 @@ export default defineConfig({
       ],
       dts: 'src/components.d.ts',
     }),
-
-    // https://github.com/antfu/unocss
-    // see unocss.config.ts for config
-    Unocss({
-      presets: [
-        presetUno(),
-        presetAttributify(),
-        presetIcons({
-          scale: 1.2,
-          warn: true,
-        }),
-      ],
-      transformers: [
-        transformerDirectives(),
-        transformerVariantGroup(),
-      ]
-    }),
+    Unocss(),
   ],
+  ssr: {
+    noExternal: ['element-plus'],
+  },
 })

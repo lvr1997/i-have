@@ -12,14 +12,38 @@ const user = {
 };
 
 const items = [
-  { icon: 'el-icon-document', text: '我发布的', link: '/userInfo/published' },
-  { icon: 'el-icon-chat-dot-round', text: '我买到的', link: '/userInfo/comments' },
-  { icon: 'el-icon-folder-opened', text: '我的评论', link: '/userInfo/collections' },
-  { icon: 'el-icon-star-off', text: '我收藏的', link: '/userInfo/favorites' },
-  { icon: 'el-icon-user', text: '我举报的', link: '/userInfo/followers' }
+  { icon: 'i-ep-document', text: '我发布的', link: '/userInfo/published' },
+  { icon: 'i-ep-chat-dot-round', text: '我买到的', link: '/userInfo/comments' },
+  { icon: 'i-ep-folder-opened', text: '我的评论', link: '/userInfo/collections' },
+  { icon: 'i-ep-star-off', text: '我收藏的', link: '/userInfo/favorites' },
+  { icon: 'i-ep-user', text: '我举报的', link: '/userInfo/followers' }
 ];
 
 const activeTab = ref('/userInfo/published');
+
+const posts = [
+  {
+    id: 1,
+    publishTime: '2023-01-01',
+    title: '我发布的文章1',
+    content: '这是我发布的第一篇文章',
+    time: '2023-01-01',
+    likes: 10,
+    comments: 5,
+    views: 100,
+    image: 'https://placehold.co/300x200'
+  },
+  {
+    id: 2,
+    title: '我发布的文章2',
+    content: '这是我发布的第二篇文章',
+    time: '2023-01-02',
+    likes: 15,
+    comments: 8,
+    collections: 4,
+    image: 'https://placehold.co/300x200'
+  }
+]
 </script>
 
 <template>

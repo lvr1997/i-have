@@ -8,9 +8,9 @@
       >
         <h3 class="text-xl font-bold my-2">{{ notice.title }}</h3>
         <div class="flex items-center text-sm text-gray-600 gap-2 mb-2">
-          <el-icon><User /></el-icon>
+          <div class="i-ep-user"></div>
           <span>{{ notice.name }}</span>
-          <el-icon><Clock /></el-icon>
+          <div class="i-ep-clock"></div>
           <span>{{ notice.time }}</span>
         </div>
         <p class="text-base">{{ notice.content }}</p>
@@ -27,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import { Clock, User } from '@element-plus/icons-vue';
 import { ref } from 'vue';
 
 const notices = [

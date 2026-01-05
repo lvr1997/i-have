@@ -5,18 +5,13 @@
                 <el-upload v-model:file-list="fileList" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" list-type="picture-card"
                            :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
                     <el-icon>
-                        <Plus />
+                        <i class="i-ep-plus"></i>
                     </el-icon>
                 </el-upload>
 
                 <el-dialog v-model="dialogVisible">
                     <img w-full :src="dialogImageUrl" alt="Preview Image" />
                 </el-dialog>
-            </el-form-item>
-            <el-form-item label="选择学校">
-                <el-select v-model="form.region" placeholder="请选择学校">
-                    <el-option label="黑龙江科技大学" value="1" />
-                </el-select>
             </el-form-item>
             <el-form-item label="闲置名称">
                 <el-input v-model="form.name" />
@@ -47,7 +42,7 @@
             </el-form-item>
 
             <el-form-item label="闲置分类">
-                <el-select v-model="form.type" placeholder="请选择分类">
+                <el-select v-model="form.category" placeholder="请选择分类">
                     <el-option label="电子数码" value="1"></el-option>
                 </el-select>
             </el-form-item>
@@ -70,7 +65,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus } from '@element-plus/icons-vue'
 import type { UploadProps, UploadUserFile } from 'element-plus'
 import { reactive } from 'vue'
 
@@ -96,12 +90,13 @@ const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
 // do not use same name with ref
 const form = reactive({
     name: '',
-    region: '',
-    date1: '',
-    date2: '',
+    price: 0,
+    realPrice:0,
+    buyUrl: '',
+    buyMethod: '',
+    address: '',
     delivery: false,
-    type: [],
-    resource: '',
+    category: '',
     desc: '',
 })
 

@@ -19,22 +19,11 @@
       <h2>最新发布</h2>
       <div class="flex justify-around ">
         <el-radio-group v-model="categoryId" size="large">
-          <el-radio-button label="电子数码" value="New York" />
-          <el-radio-button label="棋牌休闲" value="Washington" />
-          <el-radio-button label="书籍刊物" value="Los Angeles" />
-          <el-radio-button label="服装衣物" value="Chicago" />
+          <el-radio-button label="电子数码" :value="2" />
+          <el-radio-button label="棋牌休闲" :value="3" />
+          <el-radio-button label="书籍刊物" :value="4" />
+          <el-radio-button label="服装衣物" :value="5" />
         </el-radio-group>
-
-        <el-input
-          size="large"
-          v-model="searchKey"
-          style="width: 300px"
-          placeholder="请输入关键字"
-          :prefix-icon="Search">
-          <template #append>
-            <el-button type="primary">搜索</el-button>
-          </template>
-        </el-input>
       </div>
 
       <div class="flex flex-wrap justify-center">
@@ -46,30 +35,23 @@
           />
         </el-card>
       </div>
+
+      <el-button type="primary" @click="router.push({path:'/goods', query:{categoryId: categoryId}})">更多...</el-button>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { Search } from '@element-plus/icons-vue';
 import { useUserStore } from "~/store/user";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+
 const router = useRouter();
 const userStore = useUserStore();
 
-
 const categoryId = ref('New York')
-const searchKey = ref('')
 
-// 跳转发布闲置
-const toPublish = () => {
-  if (!userStore.username) {
-    ElMessage.warning('您还未登录，请登录后再发布闲置！');
-    router.push("/login");
-  } else {
-    // 跳转发布闲置
-    router.push("/publish");
-  }
-};
 </script>
 
 <style scoped>

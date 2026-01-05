@@ -66,9 +66,10 @@ import { validate_password, validate_phone } from "~/utils/validate";
 // API
 import { Register } from "~/api/user";
 import { errorMsg, successMsg, warnMsg } from "~/utils/message";
+import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
-const emits = defineEmits(["closeDialog"]);
+const router = useRouter();
 
 const data = reactive({
     form: {
@@ -173,7 +174,7 @@ const countdown = (time?: number) => {
     // 开启定时器
     data.code_button_timer = setInterval(() => {
         second--;
-        data.code_button_text = `倒计进${second}秒`; // 按钮文本
+        data.code_button_text = `倒计时${second}秒`; // 按钮文本
         if (second <= 0) {
             data.code_button_text = `重新获取`; // 按钮文本
             data.code_button_disabled = false; // 启用按钮
@@ -204,8 +205,8 @@ const register = () => {
     };
     data.loading = true;
     Register(requestData)
-        .then((response) => {
-            successMsg(response.message)
+        .then((res) => {
+            successMsg(res.message)
             reset();
         })
         .catch(() => {
@@ -223,7 +224,9 @@ const login = () => {
     userStore.testlogin(requestData).then(res => {
         if (res.code === 200) {
             data.loading = false;
-            emits("closeDialog", false);
+            successMsg(res.msg)
+            // 路由跳转
+            router.push({ path: "/" });
             reset();
         } else {
             errorMsg(res.msg)

@@ -34,6 +34,15 @@ export const useUserStore = defineStore("user", {
                 resolve(res)
             })
            
-        }
+        },
+        // 退出登录
+        LogoutAction() {
+            // 清空用户名和角色
+            this.username = ''
+            this.role = 'STUDENT'
+            return new Promise((resolve) => {
+                resolve({ code: 200, msg: '退出登录成功' })
+            })
+        },
     },
 });

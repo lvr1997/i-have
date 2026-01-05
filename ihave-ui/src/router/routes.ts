@@ -46,7 +46,23 @@ const routes = [
           meta: {
             title: '用户信息'
           }
-        }
+        },
+        {
+          path: '/goods',
+          name: 'FrontGoods',
+          component: () => import(`~/pages/front/Goods.vue`),
+          meta: {
+            title: '全部物品'
+          }
+        },
+        {
+          path: '/detail/:id',
+          name: 'FrontDetail',
+          component: () => import(`~/pages/front/Detail.vue`),
+          meta: {
+            title: '商品详情'
+          }
+        },
       ]
     },
     {

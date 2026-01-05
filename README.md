@@ -1,6 +1,6 @@
 # 『I have』校园二手交易平台
 
-**基于2019年科大二手工坊毕业设计的V2.0版本，项目采用SpringBoot3 + Vue3构建，持续更新中...**
+**基于2019年毕业设计科大二手工坊的V2.0版本，项目采用SpringBoot3 + Vue3构建，持续更新中...**
 
 > 2024年9月3日，我再次回到这个项目，最重要的是积累和坚持✊
 > 不能放弃！！
@@ -28,7 +28,7 @@ ihave项目对我而言，我想实现在我职业技术生涯中的一项新的
 ### 环境准备：
 
 - 项目开发环境: JDK21
-- 项目开发工具： IDEA2023
+- 项目开发工具： IDEA2023/VSCode
 - 数据库：Mysql8.0、Redis
 
 ### 各模块说明
@@ -43,13 +43,27 @@ ihave项目对我而言，我想实现在我职业技术生涯中的一项新的
 2. 导入测试数据 在项目目录 `ihave-business\src\main\resources\init-data.sql` 文件夹下
 3. `ihave-web` 模块为服务启动模块，运行`com.lvr.ihave.web.WebApplication`启动学生端`web`服务
 
+管理员前端 项目目录 `ihave-web\src\main\resources\template\` 下
+
+管理员端后台地址：`http://localhost:3000/admin/login` 账号密码：`admin/123456`
+
+前台学生端（Vue项目）`ihave-ui`
+
+本项目使用 `Bun` 作为前端项目的包管理工具，你需要先安装Bun 
+
+```bash
+powershell -c "irm bun.sh/install.ps1|iex"
+```
+
+然后在项目目录下运行 `cd ihave-ui` 进入前台学生端项目目录，运行 `bun install` 安装项目依赖。
+
+5. 启动前台学生端项目，在项目目录下运行 `bun run dev` 启动项目，默认端口为 `http://localhost:8080`
+
 ## 💬项目更新记录
 
 `V2.0`
 
 - **2021-12-08** 科大二手工坊版本： `V2.0` 首次提交
-
-
 
 ## 🐞项目Bug与踩坑
 
