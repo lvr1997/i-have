@@ -49,15 +49,11 @@ ihave项目对我而言，我想实现在我职业技术生涯中的一项新的
 
 前台学生端（Vue项目）`ihave-ui`
 
-本项目使用 `Bun` 作为前端项目的包管理工具，你需要先安装Bun 
-
+本项目使用 `PNPM` 作为前端项目的包管理工具，你需要先安装PNPM 
 ```bash
-powershell -c "irm bun.sh/install.ps1|iex"
-```
+然后在项目目录下运行 `cd ihave-ui` 进入前台学生端项目目录，运行 `pnpm install` 安装项目依赖。
 
-然后在项目目录下运行 `cd ihave-ui` 进入前台学生端项目目录，运行 `bun install` 安装项目依赖。
-
-5. 启动前台学生端项目，在项目目录下运行 `bun run dev` 启动项目，默认端口为 `http://localhost:8080`
+5. 启动前台学生端项目，在项目目录下运行 `pnpm run dev` 启动项目，默认端口为 `http://localhost:8080`
 
 ## 💬项目更新记录
 
