@@ -9,9 +9,9 @@
         <h3 class="text-xl font-bold my-2">{{ item.title }}</h3>
         <!-- 修改：发布人和发布时间在同一行显示 -->
         <div class="flex items-center text-sm text-gray-600 gap-2 mb-2">
-          <el-icon><User /></el-icon>
+          <i class="i-ep-user"></i>
           <span>{{ item.name }}</span>
-          <el-icon><Clock /></el-icon>
+          <i class="i-ep-clock"></i>
           <span>{{ item.time }}</span>
         </div>
         <p class="text-base">{{ item.description }}</p>
@@ -31,8 +31,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-// 引入 element-plus 图标组件
-import { Clock, User } from '@element-plus/icons-vue';
 
 // 模拟的求购信息数据
 const wantedList = [

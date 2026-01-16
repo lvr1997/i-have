@@ -2,6 +2,7 @@ import {
     defineConfig,
     presetAttributify,
     presetIcons,
+    presetUno,
     presetTypography,
     presetWebFonts,
     transformerDirectives,
@@ -15,6 +16,7 @@ export default defineConfig({
     ],
     // 预设 Presets
     presets: [
+        presetUno(),            // 默认原子化 CSS 规则
         presetAttributify(),    // 支持属性化写法，例如 <div text="red-500"></div>
         presetIcons({           // 图标支持
             scale: 1.2,         // 图标缩放比例
