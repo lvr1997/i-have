@@ -114,7 +114,7 @@ const posts = [
         </template>
         <!-- Tab 内容可以在此处添加 -->
         <div v-if="activeTab === '/userInfo/published'" class="mb-4">
-          <h3>我的发帖</h3>
+          <h3>我的求购</h3>
           <div v-for="(post, index) in posts" :key="index" class="mb-4">
             <p><i class="el-icon-time mr-2"></i>{{ post.publishTime }}</p>
             <h4>{{ post.title }}</h4>
@@ -126,7 +126,7 @@ const posts = [
                 <i class="el-icon-chat-dot-round mr-2 ml-4"></i>{{ post.comments }}
                 <i class="el-icon-thumb-up mr-2 ml-4"></i>{{ post.likes }}
               </div>
-              <el-button size="small">祈愿分享</el-button>
+              <el-button size="small">发布求购信息</el-button>
             </div>
           </div>
           <p class="text-center mt-4">没有更多数据了</p>

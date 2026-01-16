@@ -66,7 +66,7 @@
 
 <script lang="ts" setup>
 import type { UploadProps, UploadUserFile } from 'element-plus'
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 
 const fileList = ref<UploadUserFile[]>([
     {
