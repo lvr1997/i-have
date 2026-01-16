@@ -4,6 +4,7 @@ import com.lvr.ihave.annotation.AdminToken;
 import com.lvr.ihave.business.service.*;
 import com.lvr.ihave.pojo.*;
 import com.lvr.ihave.util.MD5;
+import com.lvr.ihave.web.utils.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,9 @@ import jakarta.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 后台-用户管理接口
+ */
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -25,6 +29,9 @@ public class UserController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private ImageUtil imageUtil;
 
     /**
      * 用户列表
@@ -84,9 +91,9 @@ public class UserController {
                 user.setCreateAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 user.setStatus((byte) 1); // 默认状态为可用
                 
-                // 设置默认头像
+                // 设置默认头像 - 使用ImageUtil获取默认头像URL
                 if(user.getImgUrl() == null || user.getImgUrl().isEmpty()){
-                    user.setImgUrl("/images/default-avatar.png");
+                    user.setImgUrl(imageUtil.getDefaultAvatarUrl());
                 }
                 
                 // 设置初始密码并加密

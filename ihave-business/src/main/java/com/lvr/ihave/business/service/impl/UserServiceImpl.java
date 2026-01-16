@@ -4,16 +4,13 @@ import com.lvr.ihave.business.mapper.UserMapper;
 import com.lvr.ihave.business.service.UserService;
 import com.lvr.ihave.ex.PhoneNotFoundException;
 import com.lvr.ihave.ex.UsernameTakenException;
-import com.lvr.ihave.pojo.Roles;
 import com.lvr.ihave.pojo.SysUser;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.Random;
 
 @Service("userService")

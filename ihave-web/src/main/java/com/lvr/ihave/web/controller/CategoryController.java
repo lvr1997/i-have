@@ -14,6 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.annotation.Resource;
 
+/**
+ * 闲置分类数据查询接口
+ */
 @Controller
 @RequestMapping("/category")
 public class CategoryController {
@@ -31,7 +34,7 @@ public class CategoryController {
      * @return
      */
     @AdminToken
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public String list(@RequestParam(value = "keyword",required = false) String keyword, Model model){
        
         List<Catelog> catelogs = categoryService.selectAll();
@@ -101,7 +104,7 @@ public class CategoryController {
      * @return
      */
     @AdminToken
-    @RequestMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes){
         //判断分类下是否有闲置商品
         int goodsCount = findGoodsCountByCategoryId(id);
@@ -121,7 +124,7 @@ public class CategoryController {
      * @return
      */
     @AdminToken
-    @RequestMapping("/updateStatus")
+    @GetMapping("/updateStatus")
     public String updateStatus(@RequestParam("id") Integer id, @RequestParam("status") Byte status){
         categoryService.updateStatus(id, status);
         return "redirect:/category/list";

@@ -51,7 +51,7 @@ logging:
 # token
 token:
   header: Authorization
-  secret: lkjhgfdsa
+  secret: i-have-web
   expireTime: 30
 
 # 上传文件模式：local为本地上传，需要配置下方的imagesPath；imagesPath为你本地图片文件夹路径
@@ -59,7 +59,10 @@ token:
 uploadMode: local
 # 文件上传映射本地路径
 # 在项目的源文件夹中建立upload目录，用于文件上传
-imagesPath: E:/Code/ihave/upload/
+imagesPath: E:/git_repo/i-have/upload/
+allowedMaxSize: 10MB
+allowedTypes: jpg,jpeg,png,gif
+url-prefix: http://localhost:3000/upload/
 
 # 图片映射地址
 fileUploadPathRelative: /images/**

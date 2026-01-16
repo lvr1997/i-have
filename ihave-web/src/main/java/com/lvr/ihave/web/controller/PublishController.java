@@ -4,11 +4,12 @@ import com.lvr.ihave.annotation.UserLoginToken;
 import com.lvr.ihave.business.service.*;
 import com.lvr.ihave.constant.Constant;
 import com.lvr.ihave.constant.StatusEnum;
+import com.lvr.ihave.ex.FileUploadException;
 import com.lvr.ihave.pojo.*;
 import com.lvr.ihave.util.JSONResult;
+import com.lvr.ihave.web.utils.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 闲置物品发布接口
+ */
 @RestController
 @RequestMapping("/publish")
 public class PublishController {
@@ -40,84 +44,66 @@ public class PublishController {
     @Resource
     private ReportService reportService;
 
+    @Resource
+    private ImageUtil imageUtil;
+
 
     /**
-     * 上传商品图片
-     *
-     * @param fileName 图片文件名
-     * @return
-     * @throws IllegalStateException
-     * @throws IOException
+     * 上传商品图片 - 优化版本
+     * @param userId 用户ID
+     * @param fileName 图片文件
+     * @param request HTTP请求
+     * @return 上传结果
      */
     @UserLoginToken
-    @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public JSONResult uploadFile(@RequestParam("userId") String userId, @RequestParam("fileName") MultipartFile fileName, HttpServletRequest request) throws IllegalStateException, IOException {
-        //获取上传文件的原名
-        String oldName = fileName.getOriginalFilename();
-
-        //存储图片的物理路径
-        String realPath = "/goods";
-        File folder = new File(realPath);
-        if (!folder.exists()) {
-            folder.mkdirs();
+    @PostMapping(value = "/upload")
+    public JSONResult uploadFile(@RequestParam("userId") String userId, 
+                                @RequestParam("fileName") MultipartFile fileName, 
+                                HttpServletRequest request) {
+        try {
+            // 使用ImageUtil工具类上传图片
+            String imageUrl = imageUtil.uploadImage(fileName, "goods");
+            
+            logger.info("商品图片上传成功，用户：{}，图片URL：{}", userId, imageUrl);
+            
+            return JSONResult.success(Constant.UPLOAD_SUCCESS, imageUrl);
+            
+        } catch (FileUploadException e) {
+            logger.error("商品图片上传失败，用户：{}，错误：{}", userId, e.getMessage());
+            return JSONResult.fail(StatusEnum.FAIL.getCode(), e.getMessage());
+        } catch (Exception e) {
+            logger.error("商品图片上传异常，用户：{}，错误：{}", userId, e.getMessage());
+            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), Constant.UPLOAD_ERROR);
         }
-
-        //上传图片
-        if(fileName!=null && oldName!=null && oldName.length()>0){
-            //校验文件名后缀
-            String suffix = oldName.substring(fileName.getOriginalFilename().lastIndexOf("."));
-            suffix = suffix.toLowerCase();
-            if (suffix.equals(".jpg") || suffix.equals(".jpeg") || suffix.equals(".png")) {
-                //根据UUID生成新的文件名
-                String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
-
-                try {
-                    fileName.transferTo(new File(folder, newName));
-                } catch (IOException e) {
-                    return JSONResult.fail(StatusEnum.FAIL.getCode(), Constant.UPLOAD_ERROR);
-                }
-                //得到新的上传路径
-                String url = request.getScheme() + "://" + request.getServerName() + ":" + request
-                        .getServerPort() + "/upload" + "/goods" + newName;
-
-                logger.info("获取到最新的上传路径=====》", url);
-
-                return JSONResult.success(Constant.UPLOAD_SUCCESS, url);
-            } else {
-                //上传文件类型错误
-                return JSONResult.fail(StatusEnum.FAIL.getCode(), Constant.UPLOAD_FILE_TYPE_ERROR);
-            }
-
-        }else{
-
-            return JSONResult.fail(StatusEnum.FAIL.getCode(), Constant.UPLOAD_ERROR);
-        }
-
     }
 
     /**
-     * 删除上传的缓存商品图片
-     *
+     * 删除上传的缓存商品图片 - 优化版本
      * @param fileName 图片名称
-     * @return
+     * @return 删除结果
      */
     @UserLoginToken
-    @RequestMapping(value = "/delete_image",method = RequestMethod.POST)
-    public JSONResult delectUploadFile(@RequestParam("fileName") String fileName){
-        //获得物理路径
-        String true_path = "/path";
-        //设置文件的存储路径
-        String file_name = true_path+"\\goods\\"+fileName;
-        File file1 = new File(file_name);
-        //判断文件是否存在
-        if (file1.exists()) {
-            //删除文件
-            file1.delete();
-            return JSONResult.success(Constant.SUCCESS_OPERATION);
+    @PostMapping(value = "/delete_image")
+    public JSONResult delectUploadFile(@RequestParam("fileName") String fileName) {
+        try {
+            // 构建完整的图片URL
+            String imageUrl = imageUtil.getUrlPrefix() + "goods/" + fileName;
+            
+            // 使用ImageUtil删除图片
+            boolean deleted = imageUtil.deleteImage(imageUrl, "goods");
+            
+            if (deleted) {
+                logger.info("商品图片删除成功，文件名：{}", fileName);
+                return JSONResult.success(Constant.SUCCESS_OPERATION);
+            } else {
+                logger.warn("商品图片删除失败，文件不存在：{}", fileName);
+                return JSONResult.fail(StatusEnum.FAIL.getCode(), "文件不存在或删除失败");
+            }
+            
+        } catch (Exception e) {
+            logger.error("商品图片删除异常，文件名：{}，错误：{}", fileName, e.getMessage());
+            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), "删除文件时发生错误");
         }
-        //返回信息
-
-        return JSONResult.fail(StatusEnum.FAIL.getCode(), StatusEnum.FAIL.getMsg());
     }
 
     /**
@@ -126,7 +112,7 @@ public class PublishController {
      * @return
      */
     @UserLoginToken
-    @RequestMapping(value = "/complete",method = RequestMethod.POST)
+    @PostMapping(value = "/complete")
     public JSONResult handlePublishComplete(@RequestParam("userId") String userId,
                                             @RequestParam("goods") Goods goods,
                                             @RequestParam("goodImages") String good_images){
@@ -159,7 +145,7 @@ public class PublishController {
     }
 
     @UserLoginToken
-    @RequestMapping(value = "/delete_good",method = RequestMethod.POST)
+    @PostMapping(value = "/delete_good")
     public JSONResult delete_good(@RequestParam("gid") Integer gid){
 
         System.out.println("gid:"+gid);
@@ -175,7 +161,7 @@ public class PublishController {
     }
 
     @UserLoginToken
-    @RequestMapping(value = "/reflash",method = RequestMethod.POST)
+    @PostMapping(value = "/reflash")
     public JSONResult reflash_good(@RequestParam("gid") Integer gid){
 
         //根据闲置id擦亮闲置信息
@@ -194,10 +180,10 @@ public class PublishController {
      */
     @UserLoginToken
     @PostMapping(value = "/report")
-    public JSONResult report(@RequestParam("userId")String userId,
-                             @RequestParam("gid") Integer gid,
-                             @RequestParam("good_title") String good_title,
-                             @RequestParam("description") String description){
+    public JSONResult report(@RequestParam String userId,
+                             @RequestParam Integer gid,
+                             @RequestParam String good_title,
+                             @RequestParam String description){
         System.out.println("gid:"+gid+", good_title:"+good_title+", description:"+description);
 
         Report report = new Report();

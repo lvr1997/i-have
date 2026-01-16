@@ -7,7 +7,6 @@ import com.lvr.ihave.annotation.PassToken;
 import com.lvr.ihave.annotation.UserLoginToken;
 import com.lvr.ihave.business.service.UserService;
 import com.lvr.ihave.constant.Constant;
-import com.lvr.ihave.constant.StatusEnum;
 import com.lvr.ihave.pojo.SysUser;
 import com.lvr.ihave.util.UserContext;
 import lombok.extern.slf4j.Slf4j;

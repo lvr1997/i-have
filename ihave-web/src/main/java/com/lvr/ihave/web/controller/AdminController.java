@@ -2,6 +2,7 @@ package com.lvr.ihave.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,6 +12,9 @@ import com.lvr.ihave.constant.Constant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * 后台管理员登录认证接口
+ */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -42,11 +46,9 @@ public class AdminController {
      * @param request
      * @return
      */
-    @RequestMapping("/logout")
+    @GetMapping("/logout")
     public String logout(HttpServletRequest request){
         HttpSession session = request.getSession();
-        //清除session，会清除session
-//        session.invalidate();
         //也可以把用户登录的属性删除 也可以达到注销用户的功能
         session.removeAttribute("LoginUser");
         return "redirect:/login.html";

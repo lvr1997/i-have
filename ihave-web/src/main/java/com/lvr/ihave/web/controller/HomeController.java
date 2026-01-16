@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 前台首页相关查询接口
+ */
 @RestController
 @RequestMapping("/goods")
 public class HomeController {

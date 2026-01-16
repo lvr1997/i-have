@@ -6,11 +6,13 @@ import com.lvr.ihave.annotation.UserLoginToken;
 import com.lvr.ihave.business.service.*;
 import com.lvr.ihave.constant.Constant;
 import com.lvr.ihave.constant.StatusEnum;
+import com.lvr.ihave.ex.FileUploadException;
 import com.lvr.ihave.ex.PhoneNotFoundException;
 import com.lvr.ihave.ex.UsernameTakenException;
 import com.lvr.ihave.pojo.*;
 import com.lvr.ihave.util.JSONResult;
 import com.lvr.ihave.util.MD5;
+import com.lvr.ihave.web.utils.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 前台用户相关接口
+ */
 @RestController
 @RequestMapping("/front/user")
 public class FrontUserController {
@@ -60,6 +63,9 @@ public class FrontUserController {
     @Resource
     private ReportService reportService;
 
+    @Resource
+    private ImageUtil imageUtil;
+
     @PassToken
     @ResponseBody
     @PostMapping(value = "/forget")
@@ -69,7 +75,6 @@ public class FrontUserController {
                                        @RequestParam(value = "captchaCode",required = false) String captchaCode){
         String captchaCheckCode = (String)session.getAttribute("number");
         SysUser user = userService.getUserByPhone(phone_number);
-        Map<String, Object> map = new HashMap<String, Object>();
         //判断验证码
         if(captchaCheckCode.equals(captchaCode)){
             //判断手机号是否注册
@@ -212,7 +217,6 @@ public class FrontUserController {
     @ResponseBody
     @GetMapping(value="/published")
     public JSONResult published(@RequestParam("userId") String userId){
-        Map<String, Object> map = new HashMap<String, Object>();
         //发布留言（发布人，留言物品，留言内容）集合
         List<CommentsExtend> commentsExtends = new ArrayList<CommentsExtend>();
         //留言集合
@@ -318,53 +322,31 @@ public class FrontUserController {
 
 
     /**
-     * 处理上传的用户图片
+     * 处理上传的用户头像 - 优化版本
      * @param request request对象
-     * @param file 文件
+     * @param file 头像文件
      * @return 返回信息
-     * @throws IllegalStateException
-     * @throws IOException
      */
     @UserLoginToken
     @ResponseBody
     @PostMapping(value = "/avatar_upload")
     public JSONResult avatarUpload(HttpServletRequest request,
-                                            @RequestParam("avatar") MultipartFile file)throws IllegalStateException, IOException {
-//        SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd");
-//        String format = sdf.format(new Date());
-
-        //规定文件上传目录
-        String realPath = "/avatar";
-        File folder = new File(realPath);
-        if (!folder.exists()) {
-            folder.mkdirs();
+                                            @RequestParam("avatar") MultipartFile file) {
+        try {
+            // 使用ImageUtil工具类上传头像
+            String avatarUrl = imageUtil.uploadImage(file, "avatar");
+            
+            logger.info("用户头像上传成功，图片URL：{}", avatarUrl);
+            
+            return JSONResult.success(Constant.UPLOAD_SUCCESS, avatarUrl);
+            
+        } catch (FileUploadException e) {
+            logger.error("用户头像上传失败，错误：{}", e.getMessage());
+            return JSONResult.fail(StatusEnum.FAIL.getCode(), e.getMessage());
+        } catch (Exception e) {
+            logger.error("用户头像上传异常，错误：{}", e.getMessage());
+            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), Constant.UPLOAD_ERROR);
         }
-        //获取上传时的文件名
-        String oldName = file.getOriginalFilename();
-        //校验文件名后缀
-        String suffix = oldName.substring(file.getOriginalFilename().lastIndexOf("."));
-        suffix = suffix.toLowerCase();
-        if (suffix.equals(".jpg") || suffix.equals(".jpeg") || suffix.equals(".png") || suffix.equals(".gif")) {
-            //根据UUID生成新的文件名
-            String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
-
-            try {
-                file.transferTo(new File(folder, newName));
-            } catch (IOException e) {
-                return JSONResult.fail(StatusEnum.FAIL.getCode(), Constant.UPLOAD_ERROR);
-            }
-            //得到新的上传路径
-            String url = request.getScheme() + "://" + request.getServerName() + ":" + request
-                    .getServerPort() + "/upload" + "/avatar" + newName;
-
-            logger.info("获取到最新的上传路径=====》", url);
-
-            return JSONResult.success(Constant.UPLOAD_SUCCESS, url);
-        } else {
-            //上传文件类型错误
-            return JSONResult.fail(StatusEnum.FAIL.getCode(), Constant.UPLOAD_FILE_TYPE_ERROR);
-        }
-
     }
 
     /**
@@ -374,7 +356,7 @@ public class FrontUserController {
      */
     @UserLoginToken
     @ResponseBody
-    @RequestMapping(value = "/save_userinfo",method = RequestMethod.POST)
+    @PostMapping(value = "/save_userinfo")
     public JSONResult saveUserInfo(SysUser user){
 
         if(user!=null){
@@ -407,7 +389,7 @@ public class FrontUserController {
      */
     @UserLoginToken
     @ResponseBody
-    @RequestMapping(value = "/collect", method = RequestMethod.GET)
+    @GetMapping(value = "/collect")
     public JSONResult collect(String userId, Integer gid){
 
         //判断用户是否登陆
@@ -442,14 +424,12 @@ public class FrontUserController {
      */
     @UserLoginToken
     @ResponseBody
-    @RequestMapping(value = "/comment", method = RequestMethod.POST)
+    @PostMapping(value = "/comment")
     public JSONResult commentPublish(String userId, Integer gid, String content){
         try{
             //设置留言信息
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Comments comments = new Comments(1,userId,gid,sdf.format(new Date()),content);
-            Goods goods = goodsService.selectByPrimaryKey(gid);
-//            goodsService.updateCommentNumByPrimaryKey(gid,goods.getCommetNum()+1);
             commentsService.insert(comments);
             //返回信息
             return JSONResult.success(Constant.SUCCESS_OPERATION);
@@ -496,7 +476,7 @@ public class FrontUserController {
 
 
     /**
-     * 购买的闲置的订单
+     * 查询购买闲置
      * @param user
      * @return
      */
@@ -528,7 +508,7 @@ public class FrontUserController {
 
 
     /**
-     * 出售的闲置
+     * 查询出售的闲置
      * @param user
      * @return
      */

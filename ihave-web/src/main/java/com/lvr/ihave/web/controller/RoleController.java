@@ -15,6 +15,9 @@ import com.lvr.ihave.annotation.AdminToken;
 import com.lvr.ihave.business.service.RoleService;
 import com.lvr.ihave.pojo.Roles;
 
+/**
+ * 后台-角色管理接口
+ */
 @Controller
 @RequestMapping("/role")
 public class RoleController {

@@ -4,7 +4,6 @@ package com.lvr.ihave.web.controller;
 import com.lvr.ihave.annotation.UserLoginToken;
 import com.lvr.ihave.business.service.AddressService;
 import com.lvr.ihave.pojo.Address;
-import com.lvr.ihave.pojo.SysUser;
 import com.lvr.ihave.util.JSONResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +11,9 @@ import jakarta.annotation.Generated;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * 用户地址接口
+ */
 @RestController
 @RequestMapping("/address")
 public class AddressController{
@@ -30,7 +32,6 @@ public class AddressController{
 						  @RequestParam("receiverPhone") String recvTel,
 						  @RequestParam("receiverZip") String recvZip,
 						  @RequestParam("addressName") String recvTag){
-		SysUser user = (SysUser)session.getAttribute("cur_user");
 		Address address = new Address();
 //		address.setUid(user.getId());
 		address.setRecvName(recvName);

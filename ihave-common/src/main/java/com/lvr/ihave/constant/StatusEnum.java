@@ -12,6 +12,7 @@ public enum StatusEnum {
     ACCEPTED(202, "已接收"),
     NOT_FOUND(203, "未找到"),
     NO_CONTENT(204, "没有内容"),
+    FILE_UPLOAD_ERROR(205, "文件上传错误"),
     TOKEN_IS_EXPIRED(401, "未登录或登录状态已过期"),
     UNAUTHORIZED(403, "未授权"),
     AUTHORIZATION_INVALID(301, "授权无效");

@@ -254,7 +254,6 @@ public class DateUtil {
 			Date newDate = new Date(lastDay);
 			newTime = sdf.format(newDate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return newTime;

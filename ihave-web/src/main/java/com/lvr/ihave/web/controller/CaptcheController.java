@@ -2,8 +2,7 @@ package com.lvr.ihave.web.controller;
 
 import com.lvr.ihave.annotation.PassToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
@@ -19,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * 图片验证码接口
+ */
 @Controller
 public class CaptcheController {
     Random r = new Random();
@@ -31,7 +33,7 @@ public class CaptcheController {
      */
     @PassToken
     @ResponseBody
-    @RequestMapping(value = "/captcha",method = {RequestMethod.GET})
+    @GetMapping(value = "/captcha")
     public Map<String, Object> getCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //画布
         BufferedImage image = new BufferedImage(125, 33, BufferedImage.TYPE_INT_RGB);

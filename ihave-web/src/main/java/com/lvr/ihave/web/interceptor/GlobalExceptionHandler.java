@@ -2,6 +2,7 @@ package com.lvr.ihave.web.interceptor;
 
 import com.lvr.ihave.constant.Constant;
 import com.lvr.ihave.constant.StatusEnum;
+import com.lvr.ihave.ex.FileUploadException;
 import com.lvr.ihave.ex.PhoneNotFoundException;
 import com.lvr.ihave.ex.UserPasswordErrorException;
 import com.lvr.ihave.ex.UsernameTakenException;
@@ -53,6 +54,16 @@ public class GlobalExceptionHandler {
             msg = Constant.LOGIN_FAILED;
         }
         return JSONResult.fail(StatusEnum.FAIL.getCode(), msg);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(FileUploadException.class)
+    public JSONResult handleFileUploadException(FileUploadException e) {
+        String msg = e.getMessage();
+        if (msg == null || msg.equals("")) {
+            msg = StatusEnum.FILE_UPLOAD_ERROR.getMsg();
+        }
+        return JSONResult.fail(StatusEnum.FILE_UPLOAD_ERROR.getCode(), msg);
     }
 
 }

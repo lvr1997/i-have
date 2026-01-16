@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import java.util.*;
 
+/**
+ * 闲置物品接口
+ */
 @Controller
 @RequestMapping("/good")
 public class GoodsController {
@@ -66,7 +69,6 @@ public class GoodsController {
     @GetMapping(value = "/detail")
     public JSONResult getGoodsById(@RequestParam("goodId") Integer goodId,
                                    @RequestParam(value = "userId") String userId) throws Exception {
-        Random random = new Random();
 
         //判断当前商品是否被当前登入用户收藏
         Wanted wanted = null;

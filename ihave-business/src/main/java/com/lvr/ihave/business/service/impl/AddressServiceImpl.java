@@ -41,11 +41,6 @@ public class AddressServiceImpl implements AddressService {
 
 
     public void addAddress(Address address) {
-        //1.setDistrict
-        String pCode = address.getRecvProvince();
-        String cCode = address.getRecvCity();
-        String aCode = address.getRecvArea();
-        //2.setIsDefault
         List<Address> listA = addressMapper.getAllAddressByUid(address.getUid());
         int n = listA.size() > 0 ? 0:1;
         address.setIsDefault(n);

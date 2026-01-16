@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * 订单管理相关接口
+ */
 @RestController
 @RequestMapping(value = "/order")
 public class OrderController {
