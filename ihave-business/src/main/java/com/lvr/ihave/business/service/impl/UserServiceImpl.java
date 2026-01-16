@@ -2,12 +2,15 @@ package com.lvr.ihave.business.service.impl;
 
 import com.lvr.ihave.business.mapper.UserMapper;
 import com.lvr.ihave.business.service.UserService;
+import com.lvr.ihave.constant.Constant;
 import com.lvr.ihave.ex.PhoneNotFoundException;
 import com.lvr.ihave.ex.UsernameTakenException;
 import com.lvr.ihave.pojo.SysUser;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
+
+import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +38,7 @@ public class UserServiceImpl implements UserService {
             record.setCreateAt(sdf.format(new Date()));
             return userMapper.insert(record);
         }else{
-            throw new UsernameTakenException("手机号已注册");
+            throw new UsernameTakenException(Constant.PHONE_SINED);
         }
     }
 
