@@ -49,7 +49,7 @@ public class PublishController {
 
 
     /**
-     * 上传商品图片 - 优化版本
+     * 上传商品图片 - 修复版本
      * @param userId 用户ID
      * @param fileName 图片文件
      * @param request HTTP请求
@@ -60,6 +60,17 @@ public class PublishController {
     public JSONResult uploadFile(@RequestParam("userId") String userId, 
                                 @RequestParam("fileName") MultipartFile fileName, 
                                 HttpServletRequest request) {
+        
+        logger.info("接收到商品图片上传请求，用户：{}", userId);
+        
+        // 验证文件是否为空
+        if (fileName == null || fileName.isEmpty()) {
+            logger.warn("商品图片上传失败：文件为空，用户：{}", userId);
+            return JSONResult.fail(StatusEnum.FAIL.getCode(), "请选择要上传的图片文件");
+        }
+        
+        logger.info("文件大小：{} bytes, 文件名：{}", fileName.getSize(), fileName.getOriginalFilename());
+        
         try {
             // 使用ImageUtil工具类上传图片
             String imageUrl = imageUtil.uploadImage(fileName, "goods");
@@ -72,8 +83,8 @@ public class PublishController {
             logger.error("商品图片上传失败，用户：{}，错误：{}", userId, e.getMessage());
             return JSONResult.fail(StatusEnum.FAIL.getCode(), e.getMessage());
         } catch (Exception e) {
-            logger.error("商品图片上传异常，用户：{}，错误：{}", userId, e.getMessage());
-            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), Constant.UPLOAD_ERROR);
+            logger.error("商品图片上传异常，用户：{}，错误：{}", userId, e.getMessage(), e);
+            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), "图片上传失败，请稍后重试");
         }
     }
 

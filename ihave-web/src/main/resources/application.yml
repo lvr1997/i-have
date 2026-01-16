@@ -65,4 +65,4 @@ allowedTypes: jpg,jpeg,png,gif
 url-prefix: http://localhost:3000/upload/
 
 # 图片映射地址
-fileUploadPathRelative: /images/**
+fileUploadPathRelative: /upload/**

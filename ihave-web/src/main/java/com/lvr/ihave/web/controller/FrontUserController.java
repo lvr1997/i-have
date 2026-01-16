@@ -94,10 +94,20 @@ public class FrontUserController {
     @PassToken
     @ResponseBody
     @PostMapping(value = "/login")
-    public JSONResult checkLogin(
-            @RequestParam(value = "phone",required = false) String phone,
-            @RequestParam(value = "password",required = false) String password){
+    public JSONResult checkLogin(@RequestBody Map<String, String> loginData){
         try{
+            // 从Map中获取参数
+            String phone = loginData.get("phone");
+            String password = loginData.get("password");
+            
+            // 参数验证
+            if (phone == null || phone.trim().isEmpty()) {
+                return JSONResult.fail(StatusEnum.FAIL.getCode(), "手机号不能为空");
+            }
+            if (password == null || password.trim().isEmpty()) {
+                return JSONResult.fail(StatusEnum.FAIL.getCode(), "密码不能为空");
+            }
+            
             //通过手机号查询用户信息
             SysUser cur_user = userService.getUserByPhone(phone);
             //判断用户信息
@@ -124,6 +134,10 @@ public class FrontUserController {
             //用户不存在
             //返回失败数据
             return JSONResult.fail(StatusEnum.NOT_FOUND.getCode(), e.getMessage());
+        }catch (Exception e){
+            //其他异常
+            logger.error("登录异常：" + e.getMessage(), e);
+            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), "登录失败，请稍后重试");
         }
         return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), StatusEnum.SYSTEM_ERROR.getMsg());
     }
@@ -322,7 +336,7 @@ public class FrontUserController {
 
 
     /**
-     * 处理上传的用户头像 - 优化版本
+     * 处理上传的用户头像 - 修复版本
      * @param request request对象
      * @param file 头像文件
      * @return 返回信息
@@ -331,7 +345,18 @@ public class FrontUserController {
     @ResponseBody
     @PostMapping(value = "/avatar_upload")
     public JSONResult avatarUpload(HttpServletRequest request,
-                                            @RequestParam("avatar") MultipartFile file) {
+                                 @RequestParam("avatar") MultipartFile file) {
+        
+        logger.info("接收到头像上传请求");
+        
+        // 验证文件是否为空
+        if (file == null || file.isEmpty()) {
+            logger.warn("头像上传失败：文件为空");
+            return JSONResult.fail(StatusEnum.FAIL.getCode(), "请选择要上传的头像文件");
+        }
+        
+        logger.info("文件大小：{} bytes, 文件名：{}", file.getSize(), file.getOriginalFilename());
+        
         try {
             // 使用ImageUtil工具类上传头像
             String avatarUrl = imageUtil.uploadImage(file, "avatar");
@@ -344,8 +369,8 @@ public class FrontUserController {
             logger.error("用户头像上传失败，错误：{}", e.getMessage());
             return JSONResult.fail(StatusEnum.FAIL.getCode(), e.getMessage());
         } catch (Exception e) {
-            logger.error("用户头像上传异常，错误：{}", e.getMessage());
-            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), Constant.UPLOAD_ERROR);
+            logger.error("用户头像上传异常，错误：{}", e.getMessage(), e);
+            return JSONResult.fail(StatusEnum.SYSTEM_ERROR.getCode(), "头像上传失败，请稍后重试");
         }
     }
 
