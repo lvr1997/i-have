@@ -12,6 +12,9 @@ public class Constant {
     public static final String LOGIN_TOKEN_KEY = "login_tokens:"; //登录用户 redis key
     public static final int EXPIRE_TIME = 60 * 5; //token过期时间
 
+    public static final String ROLE_ADMIN = "AUDITOR,SUPERMANAGER,ADMIN";
+    public static final String ROLE_STUDENT = "STUDENT";
+
 
     /**
      * 操作提示类型的常量
