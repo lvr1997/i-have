@@ -126,7 +126,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         try {
             // 验证JWT token
-            boolean result = JWTUtil.verify(token, Constant.LOGIN_USER_KEY.getBytes());
+            boolean result = JWTUtil.verify(token, Constant.LOGIN_TOKEN_KEY.getBytes());
             if (!result) {
                 log.error("用户token验证失败！token is {}, uri is {}", token, request.getRequestURI());
                 // 前台客户端token验证失败时返回JSON格式错误信息

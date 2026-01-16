@@ -123,7 +123,7 @@ public class FrontUserController {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("userId", cur_user.getUserId());
                     // 生成签名
-                    String token = JWTUtil.createToken(map, Constant.LOGIN_USER_KEY.getBytes());
+                    String token = JWTUtil.createToken(map, Constant.LOGIN_TOKEN_KEY.getBytes());
                     return JSONResult.success(Constant.LOGIN_SUCCESS, token);
                 } else {
                     // 密码不正确
@@ -308,12 +308,12 @@ public class FrontUserController {
     @UserLoginToken
     @ResponseBody
     @PostMapping(value = "/logout")
-    public JSONResult logout(@RequestParam("user") SysUser user) {
+    public JSONResult logout(@RequestBody SysUser user) {
         // 设置用户最后登录信息
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         user.setLastLogin(sdf.format(new Date()));
         userService.updateLastLoginByPrimaryKey(user);
-        // 重定向到首页
+        
         return JSONResult.success(Constant.SUCCESS_OPERATION);
     }
 
