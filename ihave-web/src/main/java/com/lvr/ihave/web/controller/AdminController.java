@@ -28,11 +28,11 @@ public class AdminController {
      * @return
      */
     @PostMapping("/login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session){
+    public String login(@RequestParam String username, @RequestParam String password, Model model, HttpSession session){
         //检查用户名和密码是否正确
         if("admin".equals(username) && "123456".equals(password)){
             //当用户名为admin且密码是123456的时候可以进入主页面
-            session.setAttribute(Constant.LOGIN_USER_KEY,username);
+            session.setAttribute(Constant.LOGIN_USER_KEY, username);
             return "redirect:/main.html";
         }else{
             //用户名或者密码错误的时候给出相应的错误提示,并且返回主页面
@@ -49,8 +49,8 @@ public class AdminController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request){
         HttpSession session = request.getSession();
-        //也可以把用户登录的属性删除 也可以达到注销用户的功能
-        session.removeAttribute("LoginUser");
+        
+        session.invalidate();
         return "redirect:/login.html";
     }
 

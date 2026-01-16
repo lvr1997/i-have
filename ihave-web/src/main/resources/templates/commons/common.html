@@ -15,19 +15,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
-                    <i data-feather="image"></i>
-                    轮播图管理
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
+                <a th:class="${active=='order'?'nav-link active':'nav-link'}" th:href="@{/order/list}">
                     <i data-feather="shopping-cart"></i>
                     订单管理
                 </a>
             </li>
             <li class="nav-item">
-                <a th:class="${active=='goods'?'nav-link active':'nav-link'}" href="/good/listForAdmin">
+                <a th:class="${active=='goods'?'nav-link active':'nav-link'}" th:href="@{/good/listForAdmin}">
                     <i data-feather="shopping-bag"></i>
                     闲置管理
                 </a>
@@ -39,15 +33,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
+                <a th:class="${active=='message'?'nav-link active':'nav-link'}" th:href="@{/report/list}">
                     <i data-feather="message-square"></i>
                     留言管理
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
-                    <i data-feather="send"></i>
-                    举报管理
                 </a>
             </li>
         </ul>
@@ -74,7 +62,7 @@
 
 <!--顶部栏-->
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" th:fragment="topbar">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">欢迎，[[${session.LoginUser}]]</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">欢迎，[[${session.ihave}]]</a>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
             <a class="nav-link" th:href="@{/admin/logout}">注销登录</a>
