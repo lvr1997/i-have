@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -110,8 +111,11 @@ public class CaptcheController {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
         ImageIO.write(image, "png", bs);
         String imgsrc = Base64.getEncoder().encodeToString(bs.toByteArray());
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("imgsrc", "data:image/png;base64," + imgsrc);
         
-        return JSONResult.success(Constant.SUCCESS_DATA, "data:image/png;base64," + imgsrc);
+        return JSONResult.success(Constant.SUCCESS_DATA, data);
     }
 
     /**

@@ -1,4 +1,4 @@
-// import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 // 普通信息提示
 export const infoMsg = (msgInfo: string) => {
