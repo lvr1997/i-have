@@ -39,11 +39,10 @@ ihave项目对我而言，我想实现在我职业技术生涯中的一项新的
 
 ### 如何启动项目
 
-1. 导入sql文件 在项目目录 `ihave-business\src\main\resources\ihave.sql` 文件夹下（该sql仅为结构）
-2. 导入测试数据 在项目目录 `ihave-business\src\main\resources\init-data.sql` 文件夹下
-3. `ihave-web` 模块为服务启动模块，运行`com.lvr.ihave.web.WebApplication`启动学生端`web`服务
-4. 管理员前端 项目目录 `ihave-web\src\main\resources\template\` 下
-5. 前台学生端（Vue项目）`ihave-ui`
+1. 导入sql文件 在项目根目录 `sql` 文件夹下
+2. `ihave-web` 模块为服务启动模块，运行`com.lvr.ihave.web.WebApplication`启动学生端`web`服务
+3. 管理员前端 项目目录 `ihave-web\src\main\resources\template\` 下
+4. 前台学生端（Vue项目）`ihave-ui`
 
 管理员端后台地址：`http://localhost:3000/admin/login` 账号密码：`admin/123456`
 
