@@ -2,56 +2,51 @@
     <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm text-center">
             <img class="mx-auto h-10 w-auto" src="../../assets/images/logo.png" alt="logo_ihave">
-            <h2 class="mt-8 text-center text-2xl font-bold leading-9 tracking-tight">{{ data.type === "login" ? "登 录" : "注 册" }}</h2>
+            <h2 class="mt-8 text-center text-2xl font-bold leading-9 tracking-tight">{{ data.type === "login" ? "登 录" :
+                "注 册" }}</h2>
         </div>
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <el-form class="space-y-6 mt-5" ref="account_form" :model="data.form" :rules="data.form_rules" label-position="top" size="large">
+            <el-form class="space-y-6 mt-5" ref="account_form" :model="data.form" :rules="data.form_rules"
+                label-position="top" size="large">
                 <el-form-item prop="phone">
-                    <el-input v-model="data.form.phone" placeholder="用户名/手机号"></el-input>
+                    <el-input v-model="data.form.phone" placeholder="请输入手机号"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password" v-model="data.form.password" placeholder="密码"></el-input>
+                    <el-input type="password" v-model="data.form.password" placeholder="请输入密码"></el-input>
                 </el-form-item>
                 <el-form-item prop="passwords" v-if="data.type === 'register'">
-                    <el-input type="password" v-model="data.form.passwords" placeholder="确认密码"></el-input>
+                    <el-input type="password" v-model="data.form.passwords" placeholder="请输入确认密码"></el-input>
                 </el-form-item>
                 <el-form-item prop="code">
-                    <el-row :gutter="5">
-                        <el-col :span="12">
-                            <el-input v-model="data.form.code" placeholder="验证码"></el-input>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-button class="w-full" type="success" :loading="data.code_button_loading" :disabled="data.code_button_disabled" @click="handlerGetCode">
-                                {{ data.code_button_text }}
-                            </el-button>
-                        </el-col>
-                    </el-row>
-                </el-form-item>
-                <el-form-item label-position="left">
-                    <template #label>
-                        <a class="text-xs font-display font-semibold text-gray-500 hover:text-gray-600 cursor-pointer" href="#">
-                            忘记密码？
-                        </a>
-                    </template>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="w-full" type="primary" @click="submitForm" :disabled="data.submit_button_disabled" :loading="data.loading">
-                        {{ data.type === "login" ? "登录" : "注册" }}
-                    </el-button>
+                    <el-col :span="12">
+                        <el-input v-model="data.form.code" placeholder="请输入验证码"></el-input>
+                    </el-col>
+                    <el-col :span="12">
+                        <img class="cursor-pointer" :src="data.captchaUrl" alt="验证码" @click="refreshCaptcha" title="点击可刷新验证码" />
+                    </el-col>
                 </el-form-item>
                 <el-form-item>
                     <template #label>
                         <div class="text-center">
-                            <el-button v-show="data.type === 'login'" link class="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"  
-                                            @click="data.type = 'register'">
+                            <el-button class="text-xs text-gray-500/50" link>
+                                忘记密码？
+                            </el-button>
+                            <el-button v-show="data.type === 'login'" link
+                                class="text-xs text-gray-500/50"
+                                @click="data.type = 'register'">
                                 还没有账号? 去注册
                             </el-button>
-                            <el-button link v-show="data.type === 'register'" class="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"  
-                                            @click="data.type = 'login'">
+                            <el-button link v-show="data.type === 'register'"
+                                class="text-xs text-gray-500/50"
+                                @click="data.type = 'login'">
                                 已有账号? 去登录
                             </el-button>
                         </div>
                     </template>
+                    <el-button class="w-full" type="primary" @click="submitForm" :disabled="data.submit_button_disabled"
+                        :loading="data.loading">
+                        {{ data.type === "login" ? "登录" : "注册" }}
+                    </el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -59,17 +54,45 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import { useUserStore } from "~/store/user";
-import { validate_password, validate_phone } from "~/utils/validate";
-// import sha1 from "js-sha1";
-// API
-import { Register } from "~/api/user";
+import type { FormInstance, FormRules } from 'element-plus'
 import { errorMsg, successMsg, warnMsg } from "~/utils/message";
 import { useRouter } from "vue-router";
+import { useTimestamp } from "@vueuse/core";
+// API
+import { getCaptcha } from "~/api/common";
+import { Register } from "~/api/user";
+
+// https://zhuanlan.zhihu.com/p/691704266 ts封装axios
+// https://element-plus.org/zh-CN/component/form element-plus form表单验证规则
+
 
 const userStore = useUserStore();
 const router = useRouter();
+const ruleFormRef = ref<FormInstance>()
+
+
+const validatePass = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('Please input the password'))
+  } else {
+    if (data.form.password !== '') {
+      if (!ruleFormRef.value) return
+      ruleFormRef.value.validateField('passwords')
+    }
+    callback()
+  }
+}
+const validatePass2 = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码！'))
+  } else if (value !== data.form.password) {
+    callback(new Error("两次输入的密码不一致！"))
+  } else {
+    callback()
+  }
+}
 
 const data = reactive({
     form: {
@@ -80,8 +103,8 @@ const data = reactive({
     },
     form_rules: {
         phone: [{ required: true, pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: "请输入正确的手机号码", trigger: "blur" }],
-        password: [{ required: true, message: "用户密码不能为空", trigger: "blur" }, { min: 5, max: 20, message: "用户密码长度必须介于 5 和 20 之间", trigger: "blur" }, { pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur" }],
-        passwords: [{ required: true, message: "用户密码不能为空", trigger: "blur" }, { min: 5, max: 20, message: "用户密码长度必须介于 5 和 20 之间", trigger: "blur" }, { pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur" }],
+        password: [{ validator: validatePass, trigger: "blur" }, { min: 5, max: 20, message: "用户密码长度必须介于 5 和 20 之间", trigger: "blur" }, { pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur" }],
+        passwords: [{ validator: validatePass2, trigger: "blur" }, { min: 5, max: 20, message: "用户密码长度必须介于 5 和 20 之间", trigger: "blur" }, { pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur" }],
         code: [{ required: true, message: "验证码不能为空", trigger: "blur" }],
     },
     tab_menu: [
@@ -90,98 +113,34 @@ const data = reactive({
     ],
     type: 'login',
     show_text: "Sign in to your account",
-    /**
-     * 获取验证码按钮交互
-     */
-    code_button_disabled: false,
-    code_button_loading: false,
-    code_button_text: "获取验证码",
-    code_button_timer: null,
     // 提交按钮
     submit_button_disabled: true,
     loading: false,
+    captchaUrl: "",
 });
 
-// 获取验证码
-const handlerGetCode = () => {
-    const username = data.form.phone;
-    const password = data.form.password;
-    const passwords = data.form.passwords;
-    // 校验用户名
-    if (!validate_phone(username)) {
-        warnMsg("手机号格式不正确");
-        return false;
-    }
-    // 校验密码
-    if (!validate_password(password)) {
-        warnMsg("密码格式不正确")
-        return false;
-    }
-    // 判断非 登录 时，校验两次密码
-    if (data.type === "register" && password !== passwords) {
-        warnMsg("两次密码不一致")
-        return false;
-    }
 
-    // 获取验证码接口
-    const requestData = {
-        username: data.form.phone,
-    };
-    data.code_button_loading = true;
-    data.code_button_text = "发送中";
+const timestamp = useTimestamp({ offset: 0 })
+const captcha = {
+    width: 160,
+    height: 38,
+    timestamp: timestamp.value,
+}
 
-    setTimeout(() => {
-        const resData = 1234;
-        // 激活提交按钮
-        data.submit_button_disabled = false;
-        // 成功 Elementui 提示
-        successMsg(resData)
-        // 执行倒计时
-        countdown();
-    }, 2000);   
-    // GetCode(requestData).then((response) => {
-    //     const resData = response;
-    //     // 激活提交按钮
-    //     data.submit_button_disabled = false;
-    //     // 用户名存在
-    //     if (resData.resCode === 1024) {
-    //         warnMsg(resData.message);
-    //         return false;
-    //     }
-    //     // 成功 Elementui 提示
-    //     successMsg(resData.message)
-    //     // 执行倒计时
-    //     countdown();
-    // }).catch(() => {
-    //     data.code_button_loading = false;
-    //     data.code_button_text = "获取验证码";
-    // });
-};
+const refreshCaptcha = async () => {
+    try {
+        const { data: res } = await getCaptcha(captcha)
 
-/** 倒计时 */
-const countdown = (time?: number) => {
-    if (time && typeof time !== "number") {
-        return false;
+        data.captchaUrl = res.imgsrc;
+    } catch (error) {
+        errorMsg("获取验证码失败");
     }
-    let second = time || 60; // 默认时间
-    data.code_button_loading = false; // 取消加载
-    data.code_button_disabled = true; // 禁用按钮
-    data.code_button_text = `倒计时${second}秒`; // 按钮文本
-    // 判断是否存在定时器，存在则先清除
-    if (data.code_button_timer) {
-        clearInterval(data.code_button_timer);
-    }
-    // 开启定时器
-    data.code_button_timer = setInterval(() => {
-        second--;
-        data.code_button_text = `倒计时${second}秒`; // 按钮文本
-        if (second <= 0) {
-            data.code_button_text = `重新获取`; // 按钮文本
-            data.code_button_disabled = false; // 启用按钮
-            clearInterval(data.code_button_timer); // 清除倒计时
-        }
-    }, 1000);
-};
+}
+
+// Initialize captcha on component mount
+refreshCaptcha();
+
+
 /** 表单提交 */
 const account_form = ref();
 // formName
@@ -196,52 +155,40 @@ const submitForm = () => {
     });
 };
 /** 注册 */
-const register = () => {
+const register = async () => {
     const requestData = {
-        username: data.form.phone,
+        phone: data.form.phone,
         password: data.form.password,
         code: data.form.code,
-        create: 1,
     };
     data.loading = true;
-    Register(requestData)
-        .then((res) => {
-            successMsg(res.message)
-            reset();
-        })
-        .catch(() => {
-            data.loading = false;
-        });
+    try {
+        const { msg } = await Register(requestData);
+        successMsg(msg);
+        reset();
+    } catch (error) {
+        data.loading = false;
+        return;
+    }
 };
 /** 登录 */
 const login = () => {
     const requestData = {
-        username: data.form.phone,
+        phone: data.form.phone,
         password: data.form.password,
         code: data.form.code,
     };
     data.loading = true;
-    userStore.testlogin(requestData).then(res => {
-        if (res.code === 200) {
-            data.loading = false;
-            successMsg(res.msg)
-            // 路由跳转
-            router.push({ path: "/" });
-            reset();
-        } else {
-            errorMsg(res.msg)
-        }
-    })
-    // userStore.LoginAction(requestData).then((response) => {
-    //     data.submit_button_loading = false;
-    //     successMsg(response.message)
-    //     //路由跳转
-    //     router.push({ path: "/" });
-    //     reset();
-    // }).catch(() => {
-    //     data.submit_button_loading = false;
-    //     console.log("失败");
-    // });
+    userStore.LoginAction(requestData).then((response) => {
+        data.loading = false;
+        successMsg(response.msg)
+        //路由跳转
+        router.push({ path: "/" });
+        reset();
+    }).catch(() => {
+        data.submit_button_loading = false;
+        console.log("失败");
+    });
 };
 
 /** 重置 */
@@ -250,22 +197,11 @@ const reset = () => {
     // proxy.$refs.form.resetFields();
     // 切回登录模式
     data.type = "login";
-    // 清除定时器
-    data.code_button_timer && clearInterval(data.code_button_timer);
-    // 获取验证码重置文本
-    data.code_button_text = "获取验证码";
-    // 获取验证码激活
-    data.code_button_disabled = false;
     // 禁用提交按钮
     data.submit_button_disabled = true;
     // 取消提交按钮加载
     data.loading = false;
 };
-// 组件销毁之前 - 生命周期
-onBeforeUnmount(() => {
-    clearInterval(data.code_button_timer); // 清除倒计时
-});
-
 </script>
 
 <style scoped lang="scss"></style>
